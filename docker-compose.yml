@@ -1,0 +1,27 @@
+version: '3.5'
+
+services:
+  bank-account-writer:
+    image: bank-account-writer:dev    
+    build:
+      context: .
+      dockerfile: BankAccount.Writer/Dockerfile
+      args:
+        VERSION: 1.0.0.0  
+
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"      # AMQP
+      - "15672:15672"    # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: Administrator
+      RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - default
+
+networks:
+   default:
+     external: true
+     name: shared-infrastructure-network

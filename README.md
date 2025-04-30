@@ -1,6 +1,10 @@
 How to run locally?
 
 You need docker desktop installed and running. Select the "docker-compose" project as default startup project and run it.
+	
+1. When the sql server is running, you can connect to the sql server
+2. use the following settings: localhost:1433 , User=sa , Pwd=sql,s!Passw0rd
+3. run the SqlScripts\WriterDbSchemaCreation.sql script which will create the database and tables.
 
 
 How to test/trigger the writer?

@@ -1,13 +1,13 @@
 using System.Collections.Concurrent;
 using System.Text;
-using BankAccount.Writer.MessageHandlers.AccountCreatedEvent;
+using BankAccount.Writer.DomainEvents;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Rebus.Extensions;
 using Rebus.Messages;
 using Rebus.Serialization;
 
-namespace BankAccount.Writer.MessageProcessing;
+namespace BankAccount.Writer.MessageHandlers;
 
 public class MessageDeserializer : ISerializer
 {

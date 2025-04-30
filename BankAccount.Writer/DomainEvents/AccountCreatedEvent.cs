@@ -1,6 +1,6 @@
-namespace BankAccount.Writer.MessageHandlers.AccountCreatedEvent;
+namespace BankAccount.Writer.DomainEvents;
 
-public record AccountCreatedEvent
+public record AccountCreatedEvent : IAccountDomainEvent
 {
     public string AccountId { get; init; }
 

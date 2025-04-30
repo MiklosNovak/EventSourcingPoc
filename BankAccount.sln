@@ -12,6 +12,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		SqlScripts\WriterDbSchemaCreation.sql = SqlScripts\WriterDbSchemaCreation.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DomainEvents", "DomainEvents", "{D31A673D-D6A0-4B16-926B-784B76D9F5E8}"
+	ProjectSection(SolutionItems) = preProject
+		DomainEvents\AccountCreated.json = DomainEvents\AccountCreated.json
+		DomainEvents\MoneyDeposited.json = DomainEvents\MoneyDeposited.json
+		DomainEvents\MoneyTransferred.json = DomainEvents\MoneyTransferred.json
+		DomainEvents\MoneyWithdrawn.json = DomainEvents\MoneyWithdrawn.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +42,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{D31A673D-D6A0-4B16-926B-784B76D9F5E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DBB2AAB-9F34-4A4C-8DF1-EC14305453BB}

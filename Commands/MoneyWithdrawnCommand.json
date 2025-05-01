@@ -1,5 +1,4 @@
 {
   "Email": "alice@example.com",
-  "Amount": 200.00,
-  "OccurredAt": "2025-04-30T09:00:00Z"
+  "Amount": 200.00
 }

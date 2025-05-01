@@ -32,7 +32,8 @@ public class Account
     {
         var accountCreditedEvent = new AccountCreditedEvent
         {            
-            Amount = amount
+            Amount = amount,
+            AccountId = AccountId
         };
 
         Apply(accountCreditedEvent);

@@ -1,0 +1,44 @@
+﻿using BankAccount.Writer.Repositories;
+using Microsoft.Data.SqlClient;
+
+public class AccountUnitOfWork : IDisposable
+{    
+    private SqlTransaction _transaction;
+    private bool _disposed;
+    public AccountRepository AccountRepository { get; }
+
+    public AccountUnitOfWork(SqlConnection connection, AccountDomainEventDeserializer deserializer)
+    {
+        _transaction = connection.BeginTransaction();
+        AccountRepository = new AccountRepository(connection, deserializer, _transaction);
+    }
+
+    public async Task CommitAsync()
+    {
+        if (_transaction == null)
+            throw new InvalidOperationException("Transaction already committed or rolled back.");
+
+        await _transaction.CommitAsync().ConfigureAwait(false);
+        _transaction.Dispose();
+        _transaction = null;
+    }
+
+    public async Task RollbackAsync()
+    {
+        if (_transaction == null)
+            return;
+
+        await _transaction.RollbackAsync().ConfigureAwait(false);
+        _transaction.Dispose();
+        _transaction = null;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        _transaction?.Dispose();
+
+        _disposed = true;
+    }
+}

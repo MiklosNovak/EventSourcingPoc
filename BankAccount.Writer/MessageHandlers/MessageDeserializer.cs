@@ -16,7 +16,8 @@ public class MessageDeserializer : ISerializer
     {
         [nameof(AccountCreatedCommand)] = typeof(AccountCreatedCommand),
         [nameof(MoneyDepositedCommand)] = typeof(MoneyDepositedCommand),
-        [nameof(MoneyWithdrawnCommand)] = typeof(MoneyWithdrawnCommand)
+        [nameof(MoneyWithdrawnCommand)] = typeof(MoneyWithdrawnCommand),
+        [nameof(MoneyTransferredCommand)] = typeof(MoneyTransferredCommand),
     };
 
     private readonly ISerializer _serializer;

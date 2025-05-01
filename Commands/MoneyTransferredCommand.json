@@ -1,5 +1,5 @@
 {
-  "Email": "alice@example.com",
-  "TargetEmail": "bob@example.com",
+  "AccountId": "alice@example.com",
+  "TargetAccountId": "bob@example.com",
   "Amount": 150.00
 }

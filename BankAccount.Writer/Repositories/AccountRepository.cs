@@ -9,19 +9,21 @@ namespace BankAccount.Writer.Repositories;
 public class AccountRepository
 {
     private readonly SqlConnection _dbConnection;
+    private readonly SqlTransaction _transaction;
     private readonly AccountDomainEventDeserializer _eventDeserializer;
 
-    public AccountRepository(SqlConnection dbConnection, AccountDomainEventDeserializer eventDeserializer) 
+    public AccountRepository(SqlConnection dbConnection, AccountDomainEventDeserializer eventDeserializer, SqlTransaction transaction = null) 
     {
         _dbConnection = dbConnection;
         _eventDeserializer = eventDeserializer;
+        _transaction = transaction;
     }
 
     public async Task<Account> GetAsync(string email)
     {
         const string sql = @"SELECT * FROM dbo.AccountEvents WHERE AccountId = @Email ORDER BY Version ASC;";
 
-        var events = await _dbConnection.QueryAsync<AccountEventEntity>(sql, new { Email = email }).ConfigureAwait(false);
+        var events = await _dbConnection.QueryAsync<AccountEventEntity>(sql, new { Email = email }, _transaction).ConfigureAwait(false);
 
         if (events == null || !events.Any())
         {
@@ -33,11 +35,11 @@ public class AccountRepository
         return Account.Rehydrate(domainEvents);        
     }   
 
-    public async Task AddAsync(Account account)
+    public async Task SaveAsync(Account account)
     {
         const string getVersionSql = @"SELECT ISNULL(MAX(Version), 0) FROM dbo.AccountEvents WHERE AccountId = @AccountId;";
 
-        var currentMaxVersion = await _dbConnection.ExecuteScalarAsync<int>(getVersionSql, new { account.AccountId }).ConfigureAwait(false);                
+        var currentMaxVersion = await _dbConnection.ExecuteScalarAsync<int>(getVersionSql, new { account.AccountId }, _transaction).ConfigureAwait(false);                
         var expectedVersion = account.Version - account.GetUncommittedEvents.Count;
 
         // if someone else has inserted an event in the meantime, we will get a concurrency exception
@@ -60,7 +62,7 @@ public class AccountRepository
             });
 
         // itt will be atomic, if version conflict occures due to concurrency, it will throw an exception because of the database constraint
-        await _dbConnection.BulkInsertAsync(domainEvents).ConfigureAwait(false);        
+        await _dbConnection.BulkInsertAsync(domainEvents, _transaction).ConfigureAwait(false);        
 
         account.ClearUncommittedEvents();
     }

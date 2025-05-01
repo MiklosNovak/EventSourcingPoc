@@ -16,5 +16,5 @@ How to test/trigger the writer?
 	- set the following headers:
 		- "rbs2-content-type" to "application/json"
 		- "rbs2-msg-type" to "AccountCreatedCommand"
-	- set the payload: 	{  "Email": "alice@example.com",  "OccurredAt": "2025-04-30T08:00:00Z" }
+	- set the payload: 	{  "AccountId": "alice@example.com" }
 4. Click "Publish message" button.

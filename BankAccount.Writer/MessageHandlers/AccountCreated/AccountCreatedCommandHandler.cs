@@ -16,14 +16,14 @@ public class AccountCreatedCommandHandler : IHandleMessages<AccountCreatedComman
     public async Task Handle(AccountCreatedCommand message)
     {
         // here the AccountCreatedCommand is an integration Command, an instruction from outside your domain, you shouldn't persist directly as an event        
-        var account = await _accountRepository.GetAsync(message.Email).ConfigureAwait(false);
+        var account = await _accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account != null)
         {
-            throw new InvalidOperationException($"Account with email '{message.Email}' already exists.");
+            throw new InvalidOperationException($"Account with email '{message.AccountId}' already exists.");
         }
 
-        account = new Account(message.Email);
-        await _accountRepository.AddAsync(account).ConfigureAwait(false);
+        account = new Account(message.AccountId);
+        await _accountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

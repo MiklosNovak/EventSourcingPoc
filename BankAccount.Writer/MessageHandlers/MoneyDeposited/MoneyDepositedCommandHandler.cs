@@ -14,16 +14,15 @@ public class MoneyDepositedCommandHandler : IHandleMessages<MoneyDepositedComman
     }
 
     public async Task Handle(MoneyDepositedCommand message)
-    {
-        // here the AccountCreatedCommand is an integration Command, an instruction from outside your domain, you shouldn't persist directly as an event        
-        var account = await _accountRepository.GetAsync(message.Email).ConfigureAwait(false);
+    {        
+        var account = await _accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account == null)
         {
-            throw new InvalidOperationException($"Account '{message.Email}' not found!");
+            throw new InvalidOperationException($"Account '{message.AccountId}' not found!");
         }
 
         account.Deposit(message.Amount);
-        await _accountRepository.AddAsync(account).ConfigureAwait(false);
+        await _accountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

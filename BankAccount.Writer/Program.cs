@@ -56,6 +56,7 @@ var host = Host.CreateDefaultBuilder(args)
                        await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedCommand)).ConfigureAwait(false);
                        await bus.Advanced.Topics.Subscribe(nameof(MoneyDepositedCommand)).ConfigureAwait(false);
                        await bus.Advanced.Topics.Subscribe(nameof(MoneyWithdrawnCommand)).ConfigureAwait(false);
+                       await bus.Advanced.Topics.Subscribe(nameof(MoneyTransferredCommand)).ConfigureAwait(false);
                    });
 
         services.AddScoped<SqlConnection>(sp =>
@@ -67,6 +68,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddScoped<AccountRepository>();
         services.AddScoped<AccountDomainEventDeserializer>();
+        services.AddScoped<AccountUnitOfWork>();
         services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedCommandHandler>();        
     })
     .UseConsoleLifetime()

@@ -15,14 +15,14 @@ public class MoneyWithdrawnCommandHandler : IHandleMessages<MoneyWithdrawnComman
 
     public async Task Handle(MoneyWithdrawnCommand message)
     {        
-        var account = await _accountRepository.GetAsync(message.Email).ConfigureAwait(false);
+        var account = await _accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account == null)
         {
-            throw new InvalidOperationException($"Account '{message.Email}' not found!");
+            throw new InvalidOperationException($"Account '{message.AccountId}' not found!");
         }
 
         account.Withdrawn(message.Amount);
-        await _accountRepository.AddAsync(account).ConfigureAwait(false);
+        await _accountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

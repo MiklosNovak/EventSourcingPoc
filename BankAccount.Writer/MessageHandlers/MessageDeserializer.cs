@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 using BankAccount.Writer.DomainEvents;
+using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Rebus.Extensions;
@@ -15,6 +16,7 @@ public class MessageDeserializer : ISerializer
     {
         [nameof(AccountCreatedCommand)] = typeof(AccountCreatedCommand),
         [nameof(MoneyDepositedCommand)] = typeof(MoneyDepositedCommand),
+        [nameof(MoneyWithdrawnCommand)] = typeof(MoneyWithdrawnCommand)
     };
 
     private readonly ISerializer _serializer;

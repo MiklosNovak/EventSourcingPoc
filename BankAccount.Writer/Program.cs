@@ -10,6 +10,7 @@ using Rebus.Pipeline;
 using Rebus.Retry.Simple;
 using Rebus.Serialization;
 using Rebus.Serialization.Json;
+using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration(config =>
@@ -54,6 +55,7 @@ var host = Host.CreateDefaultBuilder(args)
                    {
                        await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedCommand)).ConfigureAwait(false);
                        await bus.Advanced.Topics.Subscribe(nameof(MoneyDepositedCommand)).ConfigureAwait(false);
+                       await bus.Advanced.Topics.Subscribe(nameof(MoneyWithdrawnCommand)).ConfigureAwait(false);
                    });
 
         services.AddScoped<SqlConnection>(sp =>

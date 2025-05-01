@@ -9,6 +9,7 @@ public class AccountDomainEventDeserializer
     {
         nameof(AccountCreatedEvent) => JsonConvert.DeserializeObject<AccountCreatedEvent>(accountEventEntity.Data),
         nameof(AccountCreditedEvent) => JsonConvert.DeserializeObject<AccountCreditedEvent>(accountEventEntity.Data),
+        nameof(AccountDebitedEvent) => JsonConvert.DeserializeObject<AccountDebitedEvent>(accountEventEntity.Data),
 
         _ => throw new InvalidOperationException($"Unknown event type: {accountEventEntity.EventType}"),
     };

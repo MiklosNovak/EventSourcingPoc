@@ -39,6 +39,16 @@ public class Account
         Apply(accountCreditedEvent);
     }
 
+    public void Withdrawn(decimal amount)
+    {
+        var accountDebitedEvent = new AccountDebitedEvent
+        {
+            Amount = amount,
+            AccountId = AccountId
+        };
+        Apply(accountDebitedEvent);
+    }
+
     public static Account Rehydrate(IEnumerable<IAccountDomainEvent> events)
     {
         var account = new Account();
@@ -65,6 +75,9 @@ public class Account
                 break;
             case AccountCreditedEvent accountCreditedEvent:
                 Mutate(accountCreditedEvent);
+                break;
+            case AccountDebitedEvent accountDebitedEvent:
+                Mutate(accountDebitedEvent);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown event type!");
@@ -97,5 +110,20 @@ public class Account
         }
         
         Balance += accountCreditedEvent.Amount;
+    }
+
+    private void Mutate(AccountDebitedEvent accountDebitedEvent)
+    {
+        if (accountDebitedEvent.Amount <= 0)
+        {
+            throw new ArgumentException($"'{nameof(accountDebitedEvent.Amount)}' should be greater than 0!");
+        }
+
+        if (Balance - accountDebitedEvent.Amount < 0)
+        {
+            throw new InvalidOperationException($"Account '{AccountId}' has insufficient funds!");
+        }
+
+        Balance -= accountDebitedEvent.Amount;
     }
 }

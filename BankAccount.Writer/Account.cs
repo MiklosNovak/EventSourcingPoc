@@ -4,7 +4,7 @@ namespace BankAccount.Writer;
 
 public class Account
 {    
-    private readonly List<IAccountDomainEvent> _uncommittedEvents = [];
+    private readonly List<IAccountDomainEvent> _uncommittedEvents = [];    
 
     public string AccountId { get; private set; }  
     
@@ -14,39 +14,61 @@ public class Account
 
     public IReadOnlyCollection<IAccountDomainEvent> GetUncommittedEvents => _uncommittedEvents.AsReadOnly();
 
-    public Account(params IAccountDomainEvent[] events)
+    private Account()
     {
-        foreach (var domainEvent in events)
-        {
-            Apply(domainEvent);
-        }
     }
 
-    public void Apply(IAccountDomainEvent domainEvent)
+    public Account(string email)
+    {        
+        var accountCreatedEvent = new AccountCreatedEvent
+        {
+            AccountId = email.ToLowerInvariant(),
+            OccurredAt = DateTimeOffset.UtcNow
+        };
+
+        Apply(accountCreatedEvent);
+    }    
+
+    public static Account Rehydrate(IEnumerable<IAccountDomainEvent> events)
+    {
+        var account = new Account();
+        foreach (var domainEvent in events)
+        {
+            account.Apply(domainEvent);
+        }
+
+        account.ClearUncommittedEvents();
+        return account;
+    }
+
+    public void ClearUncommittedEvents()
+    {
+        _uncommittedEvents.Clear();
+    }
+
+    private void Apply(IAccountDomainEvent domainEvent)
     {
         switch (domainEvent)
         {
             case AccountCreatedEvent accountCreatedEvent:
-               
-                if (!accountCreatedEvent.AccountId.IsValidEmail())
-                {
-                    throw new ArgumentException("AccountId should be a valid mail address!");
-                }
-
-                AccountId = accountCreatedEvent.AccountId.ToLowerInvariant();
-                Balance = 0;                
-
+                Mutate(accountCreatedEvent);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown event type!");
         }
 
-        _uncommittedEvents.Add(domainEvent);
+        _uncommittedEvents.Add(domainEvent);        
         Version++;
     }
 
-    public void ClearUncommittedEvents()
-    {        
-        _uncommittedEvents.Clear();     
-    }
+    private void Mutate(AccountCreatedEvent accountCreatedEvent)
+    {  
+        if (!accountCreatedEvent.AccountId.IsValidEmail())
+        {
+            throw new ArgumentException($"'{nameof(accountCreatedEvent.AccountId)}' should be a valid mail address!");
+        }
+
+        AccountId = accountCreatedEvent.AccountId.ToLowerInvariant();
+        Balance = 0;
+    }    
 }

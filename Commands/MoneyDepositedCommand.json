@@ -1,5 +1,5 @@
 {
-  "AccountId": "alice@example.com",
+  "Email": "alice@example.com",
   "Amount": 1000.00,
   "OccurredAt": "2025-04-30T08:05:00Z"
 }

@@ -52,7 +52,7 @@ var host = Host.CreateDefaultBuilder(args)
                                        }),
                                    onCreated: async bus =>
                    {
-                       await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedEvent)).ConfigureAwait(false);                       
+                       await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedCommand)).ConfigureAwait(false);                       
                    });
 
         services.AddScoped<SqlConnection>(sp =>
@@ -63,8 +63,8 @@ var host = Host.CreateDefaultBuilder(args)
         });
 
         services.AddScoped<AccountRepository>();
-
-        services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedEventHandler>();
+        services.AddScoped<AccountDomainEventDeserializer>();
+        services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedCommandHandler>();        
     })
     .UseConsoleLifetime()
     .Build();

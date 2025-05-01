@@ -13,7 +13,7 @@ public class MessageDeserializer : ISerializer
 {
     public static readonly IReadOnlyDictionary<string, Type> MessageTypes = new ConcurrentDictionary<string, Type>
     {
-        [nameof(AccountCreatedEvent)] = typeof(AccountCreatedEvent),        
+        [nameof(AccountCreatedCommand)] = typeof(AccountCreatedCommand),        
     };
 
     private readonly ISerializer _serializer;

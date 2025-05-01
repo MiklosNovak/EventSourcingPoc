@@ -2,7 +2,5 @@
 
 public interface IAccountDomainEvent
 {
-    public string AccountId { get; }
-
-    public DateTimeOffset OccurredAt { get; }
+    public string AccountId { get; }    
 }

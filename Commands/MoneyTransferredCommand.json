@@ -1,0 +1,6 @@
+{
+  "Email": "alice@example.com",
+  "TargetEmail": "bob@example.com",
+  "Amount": 150.00,
+  "OccurredAt": "2025-04-30T10:00:00Z"
+}

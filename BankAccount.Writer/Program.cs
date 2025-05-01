@@ -35,7 +35,7 @@ var host = Host.CreateDefaultBuilder(args)
                        .Serialization(x => x.UseNewtonsoftJson(JsonInteroperabilityMode.PureJson))
                                        .Options(opt =>
                                        {
-                                           opt.RetryStrategy(rmqConfiguration.ErrorQueue, 0);
+                                           opt.RetryStrategy(rmqConfiguration.ErrorQueue, 5);
                                            opt.Decorate<ISerializer>(serializer =>
                                                 new MessageDeserializer(serializer.Get<ISerializer>()));
 
@@ -52,7 +52,8 @@ var host = Host.CreateDefaultBuilder(args)
                                        }),
                                    onCreated: async bus =>
                    {
-                       await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedCommand)).ConfigureAwait(false);                       
+                       await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedCommand)).ConfigureAwait(false);
+                       await bus.Advanced.Topics.Subscribe(nameof(MoneyDepositedCommand)).ConfigureAwait(false);
                    });
 
         services.AddScoped<SqlConnection>(sp =>

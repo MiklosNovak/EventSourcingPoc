@@ -22,12 +22,21 @@ public class Account
     {        
         var accountCreatedEvent = new AccountCreatedEvent
         {
-            AccountId = email.ToLowerInvariant(),
-            OccurredAt = DateTimeOffset.UtcNow
+            AccountId = email.ToLowerInvariant()            
         };
 
         Apply(accountCreatedEvent);
-    }    
+    }
+
+    public void Deposit(decimal amount)
+    {
+        var accountCreditedEvent = new AccountCreditedEvent
+        {            
+            Amount = amount
+        };
+
+        Apply(accountCreditedEvent);
+    }
 
     public static Account Rehydrate(IEnumerable<IAccountDomainEvent> events)
     {
@@ -53,6 +62,9 @@ public class Account
             case AccountCreatedEvent accountCreatedEvent:
                 Mutate(accountCreatedEvent);
                 break;
+            case AccountCreditedEvent accountCreditedEvent:
+                Mutate(accountCreditedEvent);
+                break;
             default:
                 throw new InvalidOperationException($"Unknown event type!");
         }
@@ -70,5 +82,19 @@ public class Account
 
         AccountId = accountCreatedEvent.AccountId.ToLowerInvariant();
         Balance = 0;
-    }    
+    }
+
+    private void Mutate(AccountCreditedEvent accountCreditedEvent)
+    {
+        if ( accountCreditedEvent.Amount <= 0)
+        {
+            throw new ArgumentException($"'{nameof(accountCreditedEvent.Amount)}' should be greater than 0!");
+        }        
+
+        if (Balance + accountCreditedEvent.Amount > 10000) {
+            throw new InvalidOperationException($"Account '{AccountId}' has reached the maximum balance of 10,000!");
+        }
+        
+        Balance += accountCreditedEvent.Amount;
+    }
 }

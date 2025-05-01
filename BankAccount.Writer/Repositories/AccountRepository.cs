@@ -61,7 +61,7 @@ public class AccountRepository
                 SchemaVersion = 1
             });
 
-        // itt will be atomic, if version conflict occures due to concurrency, it will throw an exception because of the database constraint
+        // itt will be atomic, if version conflict occures due to concurrency will throw an exception because of the database constraint
         await _dbConnection.BulkInsertAsync(domainEvents, _transaction).ConfigureAwait(false);        
 
         account.ClearUncommittedEvents();

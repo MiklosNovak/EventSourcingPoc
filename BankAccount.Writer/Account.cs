@@ -4,15 +4,16 @@ namespace BankAccount.Writer;
 
 public class Account
 {    
-    private readonly List<IAccountDomainEvent> _uncommittedEvents = [];    
+    private readonly List<(IAccountDomainEvent DomainEvent, int Version)> _uncommittedEvents = [];    
 
     public string AccountId { get; private set; }  
     
     public decimal Balance { get; private set; }
 
-    public long Version { get; private set; }
+    public int Version { get; private set; }
 
-    public IReadOnlyCollection<IAccountDomainEvent> GetUncommittedEvents => _uncommittedEvents.AsReadOnly();
+    public IReadOnlyCollection<(IAccountDomainEvent DomainEvent, int Version)> GetUncommittedEvents => _uncommittedEvents;
+    
 
     private Account()
     {
@@ -83,8 +84,10 @@ public class Account
                 throw new InvalidOperationException($"Unknown event type!");
         }
 
-        _uncommittedEvents.Add(domainEvent);        
         Version++;
+
+        var uncommittedEvent = (domainEvent, Version);
+        _uncommittedEvents.Add(uncommittedEvent);
     }
 
     private void Mutate(AccountCreatedEvent accountCreatedEvent)

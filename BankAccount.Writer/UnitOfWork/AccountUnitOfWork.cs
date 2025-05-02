@@ -35,9 +35,20 @@ public class AccountUnitOfWork : IDisposable
 
     public void Dispose()
     {
-        if (_disposed) return;
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        _transaction?.Dispose();
+    private void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            _transaction?.Dispose();
+            _transaction = null;
+        }
 
         _disposed = true;
     }

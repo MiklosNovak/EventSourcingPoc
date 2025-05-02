@@ -1,19 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>    
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-BankAccount.Writer-a8b3bd4e-9f46-4406-a68c-faf5455d139b</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">		
-		<NoWarn>CS8618;</NoWarn>		
+		<NoWarn>CS8618;IDE0290</NoWarn>		
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<NoWarn>CS8618</NoWarn>
+		<NoWarn>CS8618;IDE0290</NoWarn>
 	</PropertyGroup>
 
   <ItemGroup>

@@ -32,11 +32,11 @@ var host = Host.CreateDefaultBuilder(args)
         
         services.AddRebus(
                    conf => conf
-                       .Transport(trans => trans.UseRabbitMq(rmqConfiguration.GetConnection, rmqConfiguration.Queue))
+                       .Transport(trans => trans.UseRabbitMq(rmqConfiguration!.GetConnection, rmqConfiguration.Queue))
                        .Serialization(x => x.UseNewtonsoftJson(JsonInteroperabilityMode.PureJson))
                                        .Options(opt =>
                                        {
-                                           opt.RetryStrategy(rmqConfiguration.ErrorQueue, 5);
+                                           opt.RetryStrategy(rmqConfiguration!.ErrorQueue, 5);
                                            opt.Decorate<ISerializer>(serializer =>
                                                 new MessageDeserializer(serializer.Get<ISerializer>()));
 
@@ -61,7 +61,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddScoped<SqlConnection>(sp =>
         {            
-            var conn = new SqlConnection(msSqlConfiguration.GetConnectionString);
+            var conn = new SqlConnection(msSqlConfiguration!.GetConnectionString);
             conn.Open();
             return conn;
         });

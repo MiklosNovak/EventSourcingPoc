@@ -5,17 +5,33 @@ using Rebus.Handlers;
 namespace BankAccount.Writer.MessageHandlers.AccountCreated;
 
 public class MoneyWithdrawnCommandHandler : IHandleMessages<MoneyWithdrawnCommand>
-{         
-    private readonly AccountRepository _accountRepository;
+{
+    private readonly AccountUnitOfWork _unitOfWork;
+    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public MoneyWithdrawnCommandHandler(AccountRepository accountRepository)
-    {                
-        _accountRepository = accountRepository;
+    public MoneyWithdrawnCommandHandler(AccountUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
     }
 
     public async Task Handle(MoneyWithdrawnCommand message)
-    {        
-        var account = await _accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
+    {
+        try
+        {
+            await WithdrawnAsync(message).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync().ConfigureAwait(false);
+            throw;
+        }
+    }
+
+    private async Task WithdrawnAsync(MoneyWithdrawnCommand message)
+    {    
+        var account = await AccountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account == null)
         {
@@ -23,6 +39,8 @@ public class MoneyWithdrawnCommandHandler : IHandleMessages<MoneyWithdrawnComman
         }
 
         account.Withdrawn(message.Amount);
-        await _accountRepository.SaveAsync(account).ConfigureAwait(false);
+
+        await OutboxEventRepository.SaveAsync(account.GetUncommittedEvents).ConfigureAwait(false);
+        await AccountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

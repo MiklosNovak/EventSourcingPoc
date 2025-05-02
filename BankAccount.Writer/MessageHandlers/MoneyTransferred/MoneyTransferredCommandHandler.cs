@@ -1,4 +1,5 @@
 using BankAccount.Writer.DomainEvents;
+using BankAccount.Writer.Repositories;
 using Rebus.Handlers;
 
 namespace BankAccount.Writer.MessageHandlers.MoneyTransferred;
@@ -6,7 +7,9 @@ namespace BankAccount.Writer.MessageHandlers.MoneyTransferred;
 public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCommand>
 {         
     private readonly AccountUnitOfWork _unitOfWork;
-    
+    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
+
     public MoneyTransferredCommandHandler(AccountUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
@@ -17,7 +20,6 @@ public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCo
         try
         {
             await TransferMoney(message).ConfigureAwait(false);
-
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
         catch
@@ -29,17 +31,14 @@ public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCo
 
     public async Task TransferMoney(MoneyTransferredCommand message)
     {
-        var accountRepository = _unitOfWork.AccountRepository;
-        var outboxEventRepository = _unitOfWork.OutboxEventRepository;
-
-        var account = await accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
+        var account = await AccountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account == null)
         {
             throw new InvalidOperationException($"Account '{message.AccountId}' not found!");
         }
 
-        var targetAccount = await accountRepository.GetAsync(message.TargetAccountId).ConfigureAwait(false);
+        var targetAccount = await AccountRepository.GetAsync(message.TargetAccountId).ConfigureAwait(false);
 
         if (targetAccount == null)
         {
@@ -49,13 +48,10 @@ public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCo
         account.Withdrawn(message.Amount);
         targetAccount.Deposit(message.Amount);
 
-        var accountUncommittedEvents = account.GetUncommittedEvents;
-        var targetAccountUncommittedEvents = targetAccount.GetUncommittedEvents;
+        var uncommittedEvents = account.GetUncommittedEvents.Concat(targetAccount.GetUncommittedEvents);
+        await OutboxEventRepository.SaveAsync(uncommittedEvents).ConfigureAwait(false);        
 
-        await accountRepository.SaveAsync(account).ConfigureAwait(false);
-        await accountRepository.SaveAsync(targetAccount).ConfigureAwait(false);
-
-        await outboxEventRepository.SaveAsync(accountUncommittedEvents).ConfigureAwait(false);
-        await outboxEventRepository.SaveAsync(targetAccountUncommittedEvents).ConfigureAwait(false);        
+        await AccountRepository.SaveAsync(account).ConfigureAwait(false);
+        await AccountRepository.SaveAsync(targetAccount).ConfigureAwait(false);
     }
 }

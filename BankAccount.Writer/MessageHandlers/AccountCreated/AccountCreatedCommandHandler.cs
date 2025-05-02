@@ -5,18 +5,33 @@ using Rebus.Handlers;
 namespace BankAccount.Writer.MessageHandlers.AccountCreated;
 
 public class AccountCreatedCommandHandler : IHandleMessages<AccountCreatedCommand>
-{         
-    private readonly AccountRepository _accountRepository;
+{
+    private readonly AccountUnitOfWork _unitOfWork;
+    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public AccountCreatedCommandHandler(AccountRepository accountRepository)
-    {                
-        _accountRepository = accountRepository;
+    public AccountCreatedCommandHandler(AccountUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
     }
 
     public async Task Handle(AccountCreatedCommand message)
     {
-        // here the AccountCreatedCommand is an integration Command, an instruction from outside your domain, you shouldn't persist directly as an event        
-        var account = await _accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
+        try
+        {
+            await CreateAccountAsync(message).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync().ConfigureAwait(false);
+            throw;
+        }
+    }
+
+    private async Task CreateAccountAsync(AccountCreatedCommand message)
+    {
+        var account = await AccountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account != null)
         {
@@ -24,6 +39,8 @@ public class AccountCreatedCommandHandler : IHandleMessages<AccountCreatedComman
         }
 
         account = new Account(message.AccountId);
-        await _accountRepository.SaveAsync(account).ConfigureAwait(false);
+
+        await OutboxEventRepository.SaveAsync(account.GetUncommittedEvents).ConfigureAwait(false);
+        await AccountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

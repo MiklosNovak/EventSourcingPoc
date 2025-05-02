@@ -6,11 +6,13 @@ public class AccountUnitOfWork : IDisposable
     private SqlTransaction _transaction;
     private bool _disposed;
     public AccountRepository AccountRepository { get; }
+    public OutboxEventRepository OutboxEventRepository { get; }
 
     public AccountUnitOfWork(SqlConnection connection, AccountDomainEventDeserializer deserializer)
     {
         _transaction = connection.BeginTransaction();
         AccountRepository = new AccountRepository(connection, deserializer, _transaction);
+        OutboxEventRepository = new OutboxEventRepository(connection, _transaction);
     }
 
     public async Task CommitAsync()

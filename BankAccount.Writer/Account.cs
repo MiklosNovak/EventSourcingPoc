@@ -4,7 +4,7 @@ namespace BankAccount.Writer;
 
 public class Account
 {    
-    private readonly List<(IAccountDomainEvent DomainEvent, int Version)> _uncommittedEvents = [];    
+    private readonly List<VersionedDomainEvent> _uncommittedEvents = [];    
 
     public string AccountId { get; private set; }  
     
@@ -12,7 +12,7 @@ public class Account
 
     public int Version { get; private set; }
 
-    public IReadOnlyCollection<(IAccountDomainEvent DomainEvent, int Version)> GetUncommittedEvents => _uncommittedEvents;
+    public IReadOnlyCollection<VersionedDomainEvent> GetUncommittedEvents => [.. _uncommittedEvents];
     
 
     private Account()
@@ -86,8 +86,8 @@ public class Account
 
         Version++;
 
-        var uncommittedEvent = (domainEvent, Version);
-        _uncommittedEvents.Add(uncommittedEvent);
+        var versionedDomainEvent = new VersionedDomainEvent(domainEvent, Version);
+        _uncommittedEvents.Add(versionedDomainEvent);
     }
 
     private void Mutate(AccountCreatedEvent accountCreatedEvent)

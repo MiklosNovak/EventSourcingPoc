@@ -1,5 +1,4 @@
-﻿
-using Dapper.Contrib.Extensions;
+﻿using Dapper.Contrib.Extensions;
 using TableAttribute = System.ComponentModel.DataAnnotations.Schema.TableAttribute;
 
 [Table("AccountEvents")]

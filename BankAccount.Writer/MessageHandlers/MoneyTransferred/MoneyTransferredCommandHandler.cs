@@ -29,16 +29,17 @@ public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCo
 
     public async Task TransferMoney(MoneyTransferredCommand message)
     {
-        var repository = _unitOfWork.AccountRepository;
+        var accountRepository = _unitOfWork.AccountRepository;
+        var outboxEventRepository = _unitOfWork.OutboxEventRepository;
 
-        var account = await repository.GetAsync(message.AccountId).ConfigureAwait(false);
+        var account = await accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
         if (account == null)
         {
             throw new InvalidOperationException($"Account '{message.AccountId}' not found!");
         }
 
-        var targetAccount = await repository.GetAsync(message.TargetAccountId).ConfigureAwait(false);
+        var targetAccount = await accountRepository.GetAsync(message.TargetAccountId).ConfigureAwait(false);
 
         if (targetAccount == null)
         {
@@ -48,7 +49,13 @@ public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCo
         account.Withdrawn(message.Amount);
         targetAccount.Deposit(message.Amount);
 
-        await repository.SaveAsync(account).ConfigureAwait(false);
-        await repository.SaveAsync(targetAccount).ConfigureAwait(false);
+        var accountUncommittedEvents = account.GetUncommittedEvents;
+        var targetAccountUncommittedEvents = targetAccount.GetUncommittedEvents;
+
+        await accountRepository.SaveAsync(account).ConfigureAwait(false);
+        await accountRepository.SaveAsync(targetAccount).ConfigureAwait(false);
+
+        await outboxEventRepository.SaveAsync(accountUncommittedEvents).ConfigureAwait(false);
+        await outboxEventRepository.SaveAsync(targetAccountUncommittedEvents).ConfigureAwait(false);        
     }
 }

@@ -67,6 +67,7 @@ var host = Host.CreateDefaultBuilder(args)
         });
 
         services.AddScoped<AccountRepository>();
+        services.AddScoped<OutboxEventEntity>();
         services.AddScoped<AccountDomainEventDeserializer>();
         services.AddScoped<AccountUnitOfWork>();
         services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedCommandHandler>();        

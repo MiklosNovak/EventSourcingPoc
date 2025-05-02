@@ -60,3 +60,22 @@ BEGIN
         ON dbo.AccountEvents (AccountId, SequenceId);
 END
 GO
+
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables
+    WHERE name = N'OutboxEvents'
+      AND schema_id = SCHEMA_ID(N'dbo')
+)
+BEGIN
+    PRINT N'Creating table [dbo].[OutboxEvents]...';
+
+    CREATE TABLE dbo.OutboxEvents (
+        Version INT NOT NULL,
+        EventType NVARCHAR(255) NOT NULL,
+        Data NVARCHAR(MAX) NOT NULL,
+        Published BIT NOT NULL DEFAULT 0
+    );
+END
+GO

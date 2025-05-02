@@ -70,6 +70,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<OutboxEventEntity>();
         services.AddScoped<AccountDomainEventDeserializer>();
         services.AddScoped<AccountUnitOfWork>();
+        services.AddHostedService<MessagePublisher>();
         services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedCommandHandler>();        
     })
     .UseConsoleLifetime()

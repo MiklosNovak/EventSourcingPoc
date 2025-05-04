@@ -1,6 +1,8 @@
 ﻿using Dapper.Contrib.Extensions;
 using TableAttribute = System.ComponentModel.DataAnnotations.Schema.TableAttribute;
 
+namespace BankAccount.Writer.Repositories;
+
 [Table("AccountEvents")]
 internal record AccountEventEntity
 {

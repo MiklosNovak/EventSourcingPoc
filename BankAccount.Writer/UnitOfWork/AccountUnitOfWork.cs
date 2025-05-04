@@ -1,8 +1,10 @@
 ﻿using BankAccount.Writer.Repositories;
 using Microsoft.Data.SqlClient;
 
+namespace BankAccount.Writer.UnitOfWork;
+
 public class AccountUnitOfWork : IDisposable
-{    
+{
     private SqlTransaction _transaction;
     private bool _disposed;
     public AccountRepository AccountRepository { get; }

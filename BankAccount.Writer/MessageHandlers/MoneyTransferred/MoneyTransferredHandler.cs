@@ -1,4 +1,5 @@
 using BankAccount.Writer.Repositories;
+using BankAccount.Writer.UnitOfWork;
 using Rebus.Handlers;
 
 namespace BankAccount.Writer.MessageHandlers.MoneyTransferred;

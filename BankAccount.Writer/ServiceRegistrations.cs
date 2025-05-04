@@ -6,6 +6,7 @@ using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 using BankAccount.Writer.MessageHandlers.UserCreated;
 using BankAccount.Writer.MessagePublishers;
 using BankAccount.Writer.Repositories;
+using BankAccount.Writer.UnitOfWork;
 using Microsoft.Data.SqlClient;
 using Rebus.Config;
 using Rebus.Pipeline;

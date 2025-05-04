@@ -1,6 +1,8 @@
+using BankAccount.Reader.MessageReplay;
+
 namespace BankAccount.Reader.MessageHandlers.AccountCredited;
 
-public record AccountCreditedEvent
+public record AccountCreditedEvent : ReplayableEvent
 {
     public string AccountId { get; init; }
 

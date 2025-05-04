@@ -48,7 +48,7 @@ public class AccountRepository
             throw new InvalidOperationException($"Concurrency conflict! Expected version: {expectedVersion}, but found: {currentMaxVersion}");
         }
 
-        var domainEvents = account.GetUncommittedEvents.Select((uncommittedEvent, idx) =>
+        var domainEvents = account.GetUncommittedEvents.Select((uncommittedEvent, _) =>
         {
             var domainEvent = uncommittedEvent.DomainEvent; // this is important for the reader
 

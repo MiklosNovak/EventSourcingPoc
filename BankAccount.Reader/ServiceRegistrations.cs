@@ -3,6 +3,7 @@ using BankAccount.Reader.MessageHandlers;
 using BankAccount.Reader.MessageHandlers.AccountCreated;
 using BankAccount.Reader.MessageHandlers.AccountCredited;
 using BankAccount.Reader.MessageHandlers.AccountDebited;
+using BankAccount.Reader.MessageReplay;
 using BankAccount.Reader.MongoDb;
 using BankAccount.Reader.Repositories;
 using MongoDB.Driver;
@@ -61,12 +62,14 @@ public class ServiceRegistrations
 
         services.Configure<MongoDbConfiguration>(configuration.GetSection(MongoDbConfiguration.SectionName));
         services.AddScoped<IMongoDbContext, MongoDbContext>();
-        services.AddScoped<IMongoClient>(sp =>
+        services.AddScoped<IMongoClient>(_ =>
         {
             var mongoUrl = new MongoUrl(mongoDbConfiguration.GetConnection);
             return new MongoClient(mongoUrl);
         });
 
         services.AddScoped<AccountRepository>();
+        services.AddSingleton<MessageBuffer>();
+        services.AddHostedService<MessageReplayer>();
     }
 }

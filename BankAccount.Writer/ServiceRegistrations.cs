@@ -60,7 +60,7 @@ public class ServiceRegistrations
                                        await bus.Advanced.Topics.Subscribe(nameof(MoneyTransferredEvent)).ConfigureAwait(false);
                                    });
 
-        services.AddScoped(sp =>
+        services.AddScoped(_ =>
         {
             var conn = new SqlConnection(msSqlConfiguration!.GetConnectionString);
             conn.Open();

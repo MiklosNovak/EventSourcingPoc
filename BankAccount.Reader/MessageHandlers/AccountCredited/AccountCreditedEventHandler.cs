@@ -1,3 +1,4 @@
+using BankAccount.Reader.MessageReplay;
 using BankAccount.Reader.Repositories;
 using Rebus.Handlers;
 
@@ -7,24 +8,27 @@ public class AccountCreditedEventHandler : IHandleMessages<AccountCreditedEvent>
 {
     private readonly AccountRepository _accountRepository;
     private readonly ILogger<AccountCreditedEventHandler> _logger;
+    private readonly MessageBuffer _messageBuffer;
 
-    public AccountCreditedEventHandler(AccountRepository accountRepository, ILogger<AccountCreditedEventHandler> logger)
+    public AccountCreditedEventHandler(AccountRepository accountRepository, ILogger<AccountCreditedEventHandler> logger, MessageBuffer messageBuffer)
     {
         _logger = logger;
         _accountRepository = accountRepository;
+        _messageBuffer = messageBuffer;
     }
     public async Task Handle(AccountCreditedEvent message)
     {
         var account = await _accountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
-        if (account == null)
+
+        if (account == null || message.Version > account.Version + 1)
         {
-            _logger.LogWarning("Account {MessageAccountId} does not exist. Ignoring event.", message.AccountId);
+            _messageBuffer.Add(message);
             return;
         }
 
-        if (account.Version >= message.Version)
+        if (message.Version <= account.Version)
         {
-            _logger.LogWarning("Event version {MessageVersion} is not greater than current version {AccountVersion}. Ignoring event.", message.Version, account.Version);
+            _logger.LogWarning("Message already processed. Ignoring event with version {MessageVersion} for account {AccountId}.", message.Version, message.AccountId);
             return;
         }
 

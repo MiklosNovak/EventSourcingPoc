@@ -1,6 +1,6 @@
 ﻿using BankAccount.Writer.DomainEvents;
 
-namespace BankAccount.Writer;
+namespace BankAccount.Writer.AccountLogic;
 
 public class Account
 {    

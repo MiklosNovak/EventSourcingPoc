@@ -12,9 +12,9 @@ How to test/trigger the writer?
 1. Open the RabbitMQ admin UI at http://localhost:15672/ (username: Administrator, password: admin).)
 2. Go to the "Exchanges" tab and select the RebusTopic exchange.
 3. Open "Publish message" section.
-	- set the routing key to "AccountCreated"
+	- set the routing key to "UserCreatedEvent"
 	- set the following headers:
 		- "rbs2-content-type" to "application/json"
-		- "rbs2-msg-type" to "AccountCreated"
+		- "rbs2-msg-type" to "UserCreatedEvent"
 	- set the payload: 	{  "AccountId": "alice@example.com" }
 4. Click "Publish message" button.

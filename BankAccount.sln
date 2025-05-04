@@ -17,7 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		SqlScripts\WriterDbSchemaCreation.sql = SqlScripts\WriterDbSchemaCreation.sql
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{D31A673D-D6A0-4B16-926B-784B76D9F5E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationEvents", "IntegrationEvents", "{D31A673D-D6A0-4B16-926B-784B76D9F5E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inbound", "Inbound", "{8F353A92-9895-47B6-894C-D29086D46428}"
+	ProjectSection(SolutionItems) = preProject
+		IntegrationEvents\Inbound\MoneyDepositedEvent.json = IntegrationEvents\Inbound\MoneyDepositedEvent.json
+		IntegrationEvents\Inbound\MoneyTransferredEvent.json = IntegrationEvents\Inbound\MoneyTransferredEvent.json
+		IntegrationEvents\Inbound\MoneyWithdrawnEvent.json = IntegrationEvents\Inbound\MoneyWithdrawnEvent.json
+		IntegrationEvents\Inbound\UserCreatedEvent.json = IntegrationEvents\Inbound\UserCreatedEvent.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +47,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{8F353A92-9895-47B6-894C-D29086D46428} = {D31A673D-D6A0-4B16-926B-784B76D9F5E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DBB2AAB-9F34-4A4C-8DF1-EC14305453BB}

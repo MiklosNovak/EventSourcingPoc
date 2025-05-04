@@ -1,21 +1,20 @@
-using BankAccount.Writer.DomainEvents;
 using BankAccount.Writer.Repositories;
 using Rebus.Handlers;
 
 namespace BankAccount.Writer.MessageHandlers.MoneyTransferred;
 
-public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCommand>
+public class MoneyTransferredHandler : IHandleMessages<MoneyTransferredEvent>
 {         
     private readonly AccountUnitOfWork _unitOfWork;
     private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
     private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public MoneyTransferredCommandHandler(AccountUnitOfWork unitOfWork)
+    public MoneyTransferredHandler(AccountUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(MoneyTransferredCommand message)
+    public async Task Handle(MoneyTransferredEvent message)
     {
         try
         {
@@ -29,7 +28,7 @@ public class MoneyTransferredCommandHandler : IHandleMessages<MoneyTransferredCo
         }
     }
 
-    public async Task TransferMoney(MoneyTransferredCommand message)
+    public async Task TransferMoney(MoneyTransferredEvent message)
     {
         var account = await AccountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 

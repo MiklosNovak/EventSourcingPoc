@@ -1,4 +1,6 @@
-﻿namespace BankAccount.Writer.DomainEvents;
+﻿using BankAccount.Writer.DomainEvents;
+
+namespace BankAccount.Writer.AccountLogic;
 
 public class VersionedDomainEvent
 {

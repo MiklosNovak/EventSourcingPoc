@@ -1,25 +1,24 @@
-using BankAccount.Writer.DomainEvents;
 using BankAccount.Writer.Repositories;
 using Rebus.Handlers;
 
-namespace BankAccount.Writer.MessageHandlers.AccountCreated;
+namespace BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 
-public class AccountCreatedCommandHandler : IHandleMessages<AccountCreatedCommand>
+public class MoneyWithdrawnHandler : IHandleMessages<MoneyWithdrawnEvent>
 {
     private readonly AccountUnitOfWork _unitOfWork;
     private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
     private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public AccountCreatedCommandHandler(AccountUnitOfWork unitOfWork)
+    public MoneyWithdrawnHandler(AccountUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(AccountCreatedCommand message)
+    public async Task Handle(MoneyWithdrawnEvent message)
     {
         try
         {
-            await CreateAccountAsync(message).ConfigureAwait(false);
+            await WithdrawnAsync(message).ConfigureAwait(false);
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
         catch
@@ -29,16 +28,16 @@ public class AccountCreatedCommandHandler : IHandleMessages<AccountCreatedComman
         }
     }
 
-    private async Task CreateAccountAsync(AccountCreatedCommand message)
-    {
+    private async Task WithdrawnAsync(MoneyWithdrawnEvent message)
+    {    
         var account = await AccountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 
-        if (account != null)
+        if (account == null)
         {
-            throw new InvalidOperationException($"Account with email '{message.AccountId}' already exists.");
+            throw new InvalidOperationException($"Account '{message.AccountId}' not found!");
         }
 
-        account = new Account(message.AccountId);
+        account.Withdrawn(message.Amount);
 
         await OutboxEventRepository.SaveAsync(account.GetUncommittedEvents).ConfigureAwait(false);
         await AccountRepository.SaveAsync(account).ConfigureAwait(false);

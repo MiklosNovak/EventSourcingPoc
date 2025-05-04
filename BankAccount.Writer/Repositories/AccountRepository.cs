@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using BankAccount.Writer.AccountLogic;
+using Dapper;
 using Dapper.Bulk;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;

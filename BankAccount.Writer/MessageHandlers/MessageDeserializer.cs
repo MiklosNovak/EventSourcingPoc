@@ -1,7 +1,8 @@
 using System.Collections.Concurrent;
 using System.Text;
-using BankAccount.Writer.DomainEvents;
-using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
+using BankAccount.Writer.MessageHandlers.MoneyDeposited;
+using BankAccount.Writer.MessageHandlers.MoneyTransferred;
+using BankAccount.Writer.MessageHandlers.UserCreated;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Rebus.Extensions;
@@ -14,10 +15,10 @@ public class MessageDeserializer : ISerializer
 {
     public static readonly IReadOnlyDictionary<string, Type> MessageTypes = new ConcurrentDictionary<string, Type>
     {
-        [nameof(AccountCreatedCommand)] = typeof(AccountCreatedCommand),
-        [nameof(MoneyDepositedCommand)] = typeof(MoneyDepositedCommand),
-        [nameof(MoneyWithdrawnCommand)] = typeof(MoneyWithdrawnCommand),
-        [nameof(MoneyTransferredCommand)] = typeof(MoneyTransferredCommand),
+        [nameof(UserCreatedEvent)] = typeof(UserCreatedEvent),
+        [nameof(MoneyDepositedEvent)] = typeof(MoneyDepositedEvent),
+        [nameof(MoneyWithdrawn.MoneyWithdrawnEvent)] = typeof(MoneyWithdrawn.MoneyWithdrawnEvent),
+        [nameof(MoneyTransferredEvent)] = typeof(MoneyTransferredEvent),
     };
 
     private readonly ISerializer _serializer;

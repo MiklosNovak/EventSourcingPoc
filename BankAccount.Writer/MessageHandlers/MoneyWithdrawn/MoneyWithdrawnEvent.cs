@@ -1,6 +1,6 @@
 namespace BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 
-public record MoneyWithdrawnCommand
+public record MoneyWithdrawnEvent
 {
     public string AccountId { get; init; }
 

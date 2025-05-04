@@ -8,9 +8,11 @@ using Rebus.Pipeline;
 using Rebus.Retry.Simple;
 using Rebus.Serialization;
 using Rebus.Serialization.Json;
-using BankAccount.Writer.MessageHandlers.AccountCreated;
 using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
-using BankAccount.Writer.DomainEvents;
+using BankAccount.Writer.MessageHandlers.UserCreated;
+using BankAccount.Writer.MessageHandlers.MoneyDeposited;
+using BankAccount.Writer.MessageHandlers.MoneyTransferred;
+using BankAccount.Writer.MessagePublishers;
 
 namespace BankAccount.Writer;
 
@@ -51,13 +53,13 @@ public class ServiceRegistrations
                                        }),
                                    onCreated: async bus =>
                                    {
-                                       await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedCommand)).ConfigureAwait(false);
-                                       await bus.Advanced.Topics.Subscribe(nameof(MoneyDepositedCommand)).ConfigureAwait(false);
-                                       await bus.Advanced.Topics.Subscribe(nameof(MoneyWithdrawnCommand)).ConfigureAwait(false);
-                                       await bus.Advanced.Topics.Subscribe(nameof(MoneyTransferredCommand)).ConfigureAwait(false);
+                                       await bus.Advanced.Topics.Subscribe(nameof(UserCreatedEvent)).ConfigureAwait(false);
+                                       await bus.Advanced.Topics.Subscribe(nameof(MoneyDepositedEvent)).ConfigureAwait(false);
+                                       await bus.Advanced.Topics.Subscribe(nameof(MoneyWithdrawnEvent)).ConfigureAwait(false);
+                                       await bus.Advanced.Topics.Subscribe(nameof(MoneyTransferredEvent)).ConfigureAwait(false);
                                    });
 
-        services.AddScoped<SqlConnection>(sp =>
+        services.AddScoped(sp =>
         {
             var conn = new SqlConnection(msSqlConfiguration!.GetConnectionString);
             conn.Open();
@@ -70,6 +72,6 @@ public class ServiceRegistrations
         services.AddScoped<AccountDomainEventDeserializer>();
         services.AddScoped<AccountUnitOfWork>();
         services.AddHostedService<MessagePublisher>();
-        services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedCommandHandler>();
+        services.AutoRegisterHandlersFromAssemblyOf<UserCreatedHandler>();
     }
 }

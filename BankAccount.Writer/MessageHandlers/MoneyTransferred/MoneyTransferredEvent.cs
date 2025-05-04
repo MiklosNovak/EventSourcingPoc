@@ -1,6 +1,6 @@
-namespace BankAccount.Writer.DomainEvents;
+namespace BankAccount.Writer.MessageHandlers.MoneyTransferred;
 
-public record MoneyTransferredCommand
+public record MoneyTransferredEvent
 {
     public string AccountId { get; init; }
 

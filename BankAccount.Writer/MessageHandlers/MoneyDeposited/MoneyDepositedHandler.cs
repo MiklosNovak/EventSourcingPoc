@@ -1,21 +1,20 @@
-using BankAccount.Writer.DomainEvents;
 using BankAccount.Writer.Repositories;
 using Rebus.Handlers;
 
-namespace BankAccount.Writer.MessageHandlers.AccountCreated;
+namespace BankAccount.Writer.MessageHandlers.MoneyDeposited;
 
-public class MoneyDepositedCommandHandler : IHandleMessages<MoneyDepositedCommand>
+public class MoneyDepositedHandler : IHandleMessages<MoneyDepositedEvent>
 {
     private readonly AccountUnitOfWork _unitOfWork;
     private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
     private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public MoneyDepositedCommandHandler(AccountUnitOfWork unitOfWork)
+    public MoneyDepositedHandler(AccountUnitOfWork unitOfWork)
     {                
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(MoneyDepositedCommand message)
+    public async Task Handle(MoneyDepositedEvent message)
     {
         try
         {
@@ -29,7 +28,7 @@ public class MoneyDepositedCommandHandler : IHandleMessages<MoneyDepositedComman
         }
     }
 
-    private async Task DepositMoneyAsync(MoneyDepositedCommand message)
+    private async Task DepositMoneyAsync(MoneyDepositedEvent message)
     {
         var account = await AccountRepository.GetAsync(message.AccountId).ConfigureAwait(false);
 

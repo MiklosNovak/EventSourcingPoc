@@ -1,4 +1,4 @@
-﻿using BankAccount.Writer.DomainEvents;
+﻿using BankAccount.Writer.AccountLogic;
 using Dapper;
 using Dapper.Bulk;
 using Microsoft.Data.SqlClient;
@@ -29,8 +29,8 @@ public class OutboxEventRepository
 
     public async Task<IEnumerable<OutboxEventEntity>> GetUnProcessedEventsAsync(int batchSize)
     {
-        var unProcessedSql = "SELECT TOP @BatchSize * FROM dbo.OutboxEvents WHERE Published = 0";
-        return await _dbConnection.QueryAsync<OutboxEventEntity>(unProcessedSql, new { BatchSize = batchSize }, _transaction).ConfigureAwait(false);
+        var unProcessedSql = $"SELECT TOP {batchSize} * FROM dbo.OutboxEvents WHERE Published = 0";
+        return await _dbConnection.QueryAsync<OutboxEventEntity>(unProcessedSql, _transaction).ConfigureAwait(false);
     }
 
     public async Task MarkAsProcessedAsync(OutboxEventEntity outbox)

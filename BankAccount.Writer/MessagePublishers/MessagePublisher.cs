@@ -3,6 +3,8 @@ using Rebus.Bus;
 using Newtonsoft.Json.Linq;
 using Rebus.Messages;
 
+namespace BankAccount.Writer.MessagePublishers;
+
 public class MessagePublisher : BackgroundService
 {
     private readonly OutboxEventRepository _outboxEventRepository;
@@ -57,5 +59,5 @@ public class MessagePublisher : BackgroundService
 
         await _bus.Advanced.Topics.Publish(unProcessedEvent.EventType, payload, headers).ConfigureAwait(false);
         await _outboxEventRepository.MarkAsProcessedAsync(unProcessedEvent).ConfigureAwait(false);
-    }   
+    }
 }

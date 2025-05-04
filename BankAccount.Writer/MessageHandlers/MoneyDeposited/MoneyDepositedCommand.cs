@@ -1,8 +1,0 @@
-namespace BankAccount.Writer.DomainEvents;
-
-public record MoneyDepositedCommand
-{
-    public string AccountId { get; init; }
-
-    public decimal Amount { get; init; }
-}

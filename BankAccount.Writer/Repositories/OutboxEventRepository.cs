@@ -1,4 +1,5 @@
 ﻿using BankAccount.Writer.DomainEvents;
+using Dapper;
 using Dapper.Bulk;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
@@ -24,6 +25,18 @@ public class OutboxEventRepository
         var outboxEvents = versionedEvents.Select(Map).ToList();
         
         await _dbConnection.BulkInsertAsync(outboxEvents, _transaction).ConfigureAwait(false);        
+    }
+
+    public async Task<IEnumerable<OutboxEventEntity>> GetUnProcessedEventsAsync(int batchSize)
+    {
+        var unProcessedSql = "SELECT TOP @BatchSize * FROM dbo.OutboxEvents WHERE Published = 0";
+        return await _dbConnection.QueryAsync<OutboxEventEntity>(unProcessedSql, new { BatchSize = batchSize }, _transaction).ConfigureAwait(false);
+    }
+
+    public async Task MarkAsProcessedAsync(OutboxEventEntity outbox)
+    {
+        var updateProcessedSql = "UPDATE dbo.OutboxEvents SET Published = 1 WHERE Version = @Version AND EventType = @EventType";
+        await _dbConnection.ExecuteAsync(updateProcessedSql, new { outbox.Version, outbox.EventType }, _transaction);
     }
 
     private OutboxEventEntity Map(VersionedDomainEvent versionedEvent)

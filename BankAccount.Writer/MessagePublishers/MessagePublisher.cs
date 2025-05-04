@@ -1,20 +1,19 @@
 ﻿using BankAccount.Writer.Repositories;
-using Microsoft.Data.SqlClient;
 using Rebus.Bus;
-using Dapper;
 using Newtonsoft.Json.Linq;
 using Rebus.Messages;
 
 public class MessagePublisher : BackgroundService
 {
-    private readonly SqlConnection _connection;
+    private readonly OutboxEventRepository _outboxEventRepository;
     private readonly ILogger<MessagePublisher> _logger;
     private readonly IBus _bus;
     private readonly TimeSpan _interval = TimeSpan.FromSeconds(5);
+    private readonly int _batchSize = 10;
 
-    public MessagePublisher(SqlConnection connection, IBus bus, ILogger<MessagePublisher> logger)
+    public MessagePublisher(OutboxEventRepository outboxEventRepository, IBus bus, ILogger<MessagePublisher> logger)
     {
-        _connection = connection;
+        _outboxEventRepository = outboxEventRepository;
         _bus = bus;
         _logger = logger;
     }
@@ -25,14 +24,13 @@ public class MessagePublisher : BackgroundService
         {
             try
             {
-                var unProcessedEvents = await GetUnProcessedEventsAsync().ConfigureAwait(false);
+                var unProcessedEvents = await _outboxEventRepository.GetUnProcessedEventsAsync(_batchSize).ConfigureAwait(false);
 
                 foreach (var unProcessedEvent in unProcessedEvents)
                 {
                     try
                     {
-                        await SendMessageAsync(unProcessedEvent).ConfigureAwait(false);
-                        await MarkMessageAsProcessedAsync(unProcessedEvent).ConfigureAwait(false);
+                        await ProcessAsync(unProcessedEvent).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
@@ -49,25 +47,15 @@ public class MessagePublisher : BackgroundService
             await Task.Delay(_interval, stoppingToken);
         }
     }
-   
-    private async Task SendMessageAsync(OutboxEventEntity outbox)
-    {
-        // integration event what is published can be totally different, this is done for simplicity        
-        var headers = new Dictionary<string, string> { { Headers.Type, outbox.EventType } };
-        var payload = JObject.Parse(outbox.Data);
-        payload["Version"] = outbox.Version;
 
-        await _bus.Advanced.Topics.Publish(outbox.EventType, payload, headers).ConfigureAwait(false);        
+    private async Task ProcessAsync(OutboxEventEntity unProcessedEvent)
+    {
+        // integration event can be totally different, this is done for simplicity        
+        var headers = new Dictionary<string, string> { { Headers.Type, unProcessedEvent.EventType } };
+        var payload = JObject.Parse(unProcessedEvent.Data);
+        payload["Version"] = unProcessedEvent.Version;
+
+        await _bus.Advanced.Topics.Publish(unProcessedEvent.EventType, payload, headers).ConfigureAwait(false);
+        await _outboxEventRepository.MarkAsProcessedAsync(unProcessedEvent).ConfigureAwait(false);
     }   
-    private async Task<IEnumerable<OutboxEventEntity>> GetUnProcessedEventsAsync()
-    {
-        var unProcessedSql = "SELECT TOP 10 * FROM dbo.OutboxEvents WHERE Published = 0";
-        return await _connection.QueryAsync<OutboxEventEntity>(unProcessedSql).ConfigureAwait(false);        
-    }
-
-    private async Task MarkMessageAsProcessedAsync(OutboxEventEntity outbox)
-    {
-        var updateProcessedSql = "UPDATE dbo.OutboxEvents SET Published = 1 WHERE Version = @Version AND EventType = @EventType";
-        await _connection.ExecuteAsync(updateProcessedSql, new { outbox.Version, outbox.EventType });
-    }
 }

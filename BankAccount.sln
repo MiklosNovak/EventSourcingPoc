@@ -18,12 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{D31A673D-D6A0-4B16-926B-784B76D9F5E8}"
-	ProjectSection(SolutionItems) = preProject
-		Commands\AccountCreatedCommand.json = Commands\AccountCreatedCommand.json
-		Commands\MoneyDepositedCommand.json = Commands\MoneyDepositedCommand.json
-		Commands\MoneyTransferredCommand.json = Commands\MoneyTransferredCommand.json
-		Commands\MoneyWithdrawnCommand.json = Commands\MoneyWithdrawnCommand.json
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,7 +39,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
-		{D31A673D-D6A0-4B16-926B-784B76D9F5E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DBB2AAB-9F34-4A4C-8DF1-EC14305453BB}

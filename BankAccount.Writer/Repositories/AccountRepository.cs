@@ -23,9 +23,9 @@ public class AccountRepository
     {
         const string sql = "SELECT * FROM dbo.AccountEvents WHERE AccountId = @Email ORDER BY Version ASC;";
 
-        var events = await _dbConnection.QueryAsync<AccountEventEntity>(sql, new { Email = email }, _transaction).ConfigureAwait(false);
+        var events = (await _dbConnection.QueryAsync<AccountEventEntity>(sql, new { Email = email }, _transaction).ConfigureAwait(false)).ToList();
 
-        if (events == null || !events.Any())
+        if (events.Count == 0)
         {
             return null;
         }

@@ -17,9 +17,9 @@ public class OutboxEventRepository
         _transaction = transaction;
     }
 
-    public async Task SaveAsync(IEnumerable<VersionedDomainEvent> versionedEvents)
+    public async Task SaveAsync(IReadOnlyCollection<VersionedDomainEvent> versionedEvents)
     {
-        if (versionedEvents == null || !versionedEvents.Any())
+        if (versionedEvents == null || versionedEvents.Count == 0)
             return;
 
         var outboxEvents = versionedEvents.Select(Map).ToList();

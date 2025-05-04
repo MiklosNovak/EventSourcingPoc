@@ -41,9 +41,9 @@ public class ServiceRegistrations
                                            opt.Decorate<ISerializer>(serializer =>
                                                 new MessageDeserializer(serializer.Get<ISerializer>()));
 
-                                           opt.Decorate<IPipeline>(context =>
+                                           opt.Decorate<IPipeline>(ctx =>
                                            {
-                                               var pipeline = context.Get<IPipeline>();
+                                               var pipeline = ctx.Get<IPipeline>();
                                                var errorHandlingStep = new RebusErrorHandlingStep(); // Add the custom error handling step
                                                return new PipelineStepInjector(pipeline)
                                                    .OnReceive(

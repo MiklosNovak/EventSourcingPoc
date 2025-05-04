@@ -3,6 +3,9 @@ using BankAccount.Reader.MessageHandlers;
 using BankAccount.Reader.MessageHandlers.AccountCreated;
 using BankAccount.Reader.MessageHandlers.AccountCredited;
 using BankAccount.Reader.MessageHandlers.AccountDebited;
+using BankAccount.Reader.MongoDb;
+using BankAccount.Reader.Repositories;
+using MongoDB.Driver;
 using Rebus.Config;
 using Rebus.Pipeline;
 using Rebus.Pipeline.Receive;
@@ -22,6 +25,10 @@ public class ServiceRegistrations
             .GetRequiredSection(RabbitMqConfiguration.SectionName)
             .Get<RabbitMqConfiguration>();
 
+        var mongoDbConfiguration = configuration
+            .GetRequiredSection(MongoDbConfiguration.SectionName)
+            .Get<MongoDbConfiguration>();
+
         services.AddRebus(
             conf => conf
                 .Transport(trans => trans.UseRabbitMq(rmqConfiguration!.GetConnection, rmqConfiguration.Queue))
@@ -32,9 +39,9 @@ public class ServiceRegistrations
                     opt.Decorate<ISerializer>(serializer =>
                         new MessageDeserializer(serializer.Get<ISerializer>()));
 
-                    opt.Decorate<IPipeline>(context =>
+                    opt.Decorate<IPipeline>(ctx =>
                     {
-                        var pipeline = context.Get<IPipeline>();
+                        var pipeline = ctx.Get<IPipeline>();
                         var errorHandlingStep = new RebusErrorHandlingStep(); // Add the custom error handling step
                         return new PipelineStepInjector(pipeline)
                             .OnReceive(
@@ -52,6 +59,14 @@ public class ServiceRegistrations
 
         services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedEvent>();
 
-    }
+        services.Configure<MongoDbConfiguration>(configuration.GetSection(MongoDbConfiguration.SectionName));
+        services.AddScoped<IMongoDbContext, MongoDbContext>();
+        services.AddScoped<IMongoClient>(sp =>
+        {
+            var mongoUrl = new MongoUrl(mongoDbConfiguration.GetConnection);
+            return new MongoClient(mongoUrl);
+        });
 
+        services.AddScoped<AccountRepository>();
+    }
 }

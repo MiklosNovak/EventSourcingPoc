@@ -43,11 +43,24 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql  # Persist SQL Server DB files
     networks:
+      - default 
+
+  mongodb:
+    image: mongo
+    networks:
       - default
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: Administrator
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/var/opt/mongodb
   
 volumes:
   rabbitmq_data:
   sqlserver_data:
+  mongo-data:
 
 networks:
    default:

@@ -1,6 +1,15 @@
 version: '3.5'
 
 services:
+
+  bank-account-reader:
+    image: bank-account-reader:dev    
+    build:
+      context: .
+      dockerfile: BankAccount.Reader/Dockerfile
+      args:
+        VERSION: 1.0.0.0  
+
   bank-account-writer:
     image: bank-account-writer:dev    
     build:

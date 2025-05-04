@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationEvents", "Integr
 		IntegrationEvents\UserCreatedEvent.json = IntegrationEvents\UserCreatedEvent.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.Reader", "BankAccount.Reader\BankAccount.Reader.csproj", "{39833387-0796-67E4-2FEF-F1E9778B4607}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,12 +44,17 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39833387-0796-67E4-2FEF-F1E9778B4607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39833387-0796-67E4-2FEF-F1E9778B4607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39833387-0796-67E4-2FEF-F1E9778B4607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39833387-0796-67E4-2FEF-F1E9778B4607}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{D31A673D-D6A0-4B16-926B-784B76D9F5E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DBB2AAB-9F34-4A4C-8DF1-EC14305453BB}

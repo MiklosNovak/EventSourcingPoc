@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>    
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-BankAccount.Writer-a8b3bd4e-9f46-4406-a68c-faf5455d139b</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">		
+		<NoWarn>CS8618;IDE0290</NoWarn>		
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>CS8618;IDE0290</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\.dockerignore" Link=".dockerignore">
+	    <DependentUpon>$(DockerDefaultDockerfile)</DependentUpon>
+	  </None>
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Rebus" Version="8.8.0" />
+    <PackageReference Include="Rebus.RabbitMq" Version="10.0.0" />
+    <PackageReference Include="Rebus.ServiceProvider" Version="10.3.0" />
+  </ItemGroup>
+</Project>

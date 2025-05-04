@@ -81,7 +81,7 @@ public class Account
                 Mutate(accountDebitedEvent);
                 break;
             default:
-                throw new InvalidOperationException($"Unknown event type!");
+                throw new InvalidOperationException("Unknown event type!");
         }
 
         Version++;

@@ -1,18 +1,18 @@
 ﻿using BankAccount.Writer.Configuration;
+using BankAccount.Writer.MessageHandlers;
+using BankAccount.Writer.MessageHandlers.MoneyDeposited;
+using BankAccount.Writer.MessageHandlers.MoneyTransferred;
+using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
+using BankAccount.Writer.MessageHandlers.UserCreated;
+using BankAccount.Writer.MessagePublishers;
 using BankAccount.Writer.Repositories;
 using Microsoft.Data.SqlClient;
 using Rebus.Config;
-using BankAccount.Writer.MessageHandlers;
-using Rebus.Pipeline.Receive;
 using Rebus.Pipeline;
+using Rebus.Pipeline.Receive;
 using Rebus.Retry.Simple;
 using Rebus.Serialization;
 using Rebus.Serialization.Json;
-using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
-using BankAccount.Writer.MessageHandlers.UserCreated;
-using BankAccount.Writer.MessageHandlers.MoneyDeposited;
-using BankAccount.Writer.MessageHandlers.MoneyTransferred;
-using BankAccount.Writer.MessagePublishers;
 
 namespace BankAccount.Writer;
 
@@ -36,7 +36,7 @@ public class ServiceRegistrations
                        .Serialization(x => x.UseNewtonsoftJson(JsonInteroperabilityMode.PureJson))
                                        .Options(opt =>
                                        {
-                                           opt.RetryStrategy(rmqConfiguration!.ErrorQueue, 5);
+                                           opt.RetryStrategy(rmqConfiguration!.ErrorQueue, rmqConfiguration.MaxRetry);
                                            opt.Decorate<ISerializer>(serializer =>
                                                 new MessageDeserializer(serializer.Get<ISerializer>()));
 

@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Text;
 using BankAccount.Writer.MessageHandlers.MoneyDeposited;
 using BankAccount.Writer.MessageHandlers.MoneyTransferred;
+using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 using BankAccount.Writer.MessageHandlers.UserCreated;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,7 +18,7 @@ public class MessageDeserializer : ISerializer
     {
         [nameof(UserCreatedEvent)] = typeof(UserCreatedEvent),
         [nameof(MoneyDepositedEvent)] = typeof(MoneyDepositedEvent),
-        [nameof(MoneyWithdrawn.MoneyWithdrawnEvent)] = typeof(MoneyWithdrawn.MoneyWithdrawnEvent),
+        [nameof(MoneyWithdrawnEvent)] = typeof(MoneyWithdrawnEvent),
         [nameof(MoneyTransferredEvent)] = typeof(MoneyTransferredEvent),
     };
 

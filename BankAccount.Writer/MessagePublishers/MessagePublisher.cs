@@ -1,6 +1,6 @@
 ﻿using BankAccount.Writer.Repositories;
-using Rebus.Bus;
 using Newtonsoft.Json.Linq;
+using Rebus.Bus;
 using Rebus.Messages;
 
 namespace BankAccount.Writer.MessagePublishers;

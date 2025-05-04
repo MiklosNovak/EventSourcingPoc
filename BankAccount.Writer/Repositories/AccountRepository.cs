@@ -3,7 +3,6 @@ using Dapper;
 using Dapper.Bulk;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
-using System.Data;
 
 namespace BankAccount.Writer.Repositories;
 
@@ -22,7 +21,7 @@ public class AccountRepository
 
     public async Task<Account> GetAsync(string email)
     {
-        const string sql = @"SELECT * FROM dbo.AccountEvents WHERE AccountId = @Email ORDER BY Version ASC;";
+        const string sql = "SELECT * FROM dbo.AccountEvents WHERE AccountId = @Email ORDER BY Version ASC;";
 
         var events = await _dbConnection.QueryAsync<AccountEventEntity>(sql, new { Email = email }, _transaction).ConfigureAwait(false);
 
@@ -38,7 +37,7 @@ public class AccountRepository
 
     public async Task SaveAsync(Account account)
     {
-        const string getVersionSql = @"SELECT ISNULL(MAX(Version), 0) FROM dbo.AccountEvents WHERE AccountId = @AccountId;";
+        const string getVersionSql = "SELECT ISNULL(MAX(Version), 0) FROM dbo.AccountEvents WHERE AccountId = @AccountId;";
 
         var currentMaxVersion = await _dbConnection.ExecuteScalarAsync<int>(getVersionSql, new { account.AccountId }, _transaction).ConfigureAwait(false);
         var expectedVersion = account.Version - account.GetUncommittedEvents.Count;

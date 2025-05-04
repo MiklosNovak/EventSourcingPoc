@@ -18,6 +18,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: Administrator
       RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  # Persist RabbitMQ state
     networks:
       - default
 
@@ -29,8 +31,14 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql  # Persist SQL Server DB files
     networks:
       - default
+  
+volumes:
+  rabbitmq_data:
+  sqlserver_data:
 
 networks:
    default:

@@ -1,0 +1,5 @@
+{
+  "AccountId":"alice@example.com",
+  "Amount":1000.0,
+  "Version":2
+}

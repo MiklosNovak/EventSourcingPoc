@@ -41,7 +41,28 @@ Before processing commands, the Writer service performs basic validation to ensu
 If any validation fails, the command is rejected, and an appropriate error is logged or returned to the caller.
 
 ### Message Reply
-The Writer service also supports a **message reply mechanism**. External services can request account details by sending an `AccountReplyRequestedEvent`. The Writer service processes this event and replies with the current state of the account, including the email and balance.
+The system supports a **message reply mechanism** to handle scenarios where the Reader service detects inconsistencies in its materialized view. This process involves the following steps:
+
+1. **AccountStateCorruptedEvent**:
+   - It triggers the Reader to rebuild the state of the given account.
+   - This event includes the `AccountId` of the affected account.
+
+2. **Reader Cleanup**:
+   - Upon detecting the corrupted state, the Reader deletes the account's data from its materialized view to prepare for a full rebuild.
+
+3. **AccountReplyRequestedEvent**:
+   - The Reader triggers the Writer by publishing an `AccountReplyRequestedEvent`.
+   - This event requests the Writer to resend all events related to the specified `AccountId`.
+
+4. **Writer Response**:
+   - The Writer processes the `AccountReplyRequestedEvent` and retrieves all events for the specified account from its event store.
+   - These events are republished to RabbitMQ in the correct order.
+
+5. **Reader Replay**:
+   - The Reader consumes the republished events and replays them to rebuild the materialized view for the account.
+   - It can handle unordered events as well.
+
+This mechanism ensures that the Reader can recover from inconsistencies and maintain an accurate and up-to-date materialized view of the data.
 
 ## Key Concepts
 
@@ -77,6 +98,21 @@ To test the Writer service, you can manually publish a message to RabbitMQ:
    - Add the following headers:
      - `"rbs2-content-type"`: `application/json`
      - `"rbs2-msg-type"`: `UserCreatedEvent`
-   - Set the payload to:
-     
-     
+   - Set the payload to: { "AccountId": "alice@example.com" }    
+4. Click the "Publish message" button.
+
+## Technologies Used
+- **.NET 8**: The project is built using the latest version of .NET.
+- **MS SQL**: Relational database for the Writer service.
+- **MongoDB**: NoSQL database for the Reader service.
+- **RabbitMQ**: Message broker for event communication between services.
+
+## Future Improvements
+- Add more robust error handling and retries for event processing.
+- Implement snapshots to optimize event replay for large datasets.
+- Ensure that events consumed by the Writer contain a unique ID to allow the Writer to ignore duplicate messages. This is already handled in the Reader, as messages sent by the Writer are unique (based on `AccountId` and `Version`).
+
+## Conclusion
+This POC demonstrates the power of event sourcing and CQRS in building scalable and maintainable systems. By separating the write and read sides, the architecture ensures better performance, scalability, and flexibility for future enhancements.
+
+

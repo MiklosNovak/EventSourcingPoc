@@ -36,7 +36,7 @@ public class OutboxEventRepository
     public async Task MarkAsProcessedAsync(OutboxEventEntity outbox)
     {
         var updateProcessedSql = "UPDATE dbo.OutboxEvents SET Published = 1 WHERE Version = @Version AND EventType = @EventType";
-        await _dbConnection.ExecuteAsync(updateProcessedSql, new { outbox.Version, outbox.EventType }, _transaction);
+        await _dbConnection.ExecuteAsync(updateProcessedSql, new { outbox.Version, outbox.EventType }, _transaction).ConfigureAwait(false);
     }
 
     private OutboxEventEntity Map(VersionedDomainEvent versionedEvent)

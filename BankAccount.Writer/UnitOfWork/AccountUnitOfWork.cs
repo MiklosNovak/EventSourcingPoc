@@ -23,7 +23,7 @@ public class AccountUnitOfWork : IDisposable
             throw new InvalidOperationException("Transaction already committed or rolled back.");
 
         await _transaction.CommitAsync().ConfigureAwait(false);
-        await _transaction.DisposeAsync();
+        await _transaction.DisposeAsync().ConfigureAwait(false);
         _transaction = null;
     }
 
@@ -33,7 +33,7 @@ public class AccountUnitOfWork : IDisposable
             return;
 
         await _transaction.RollbackAsync().ConfigureAwait(false);
-        await _transaction.DisposeAsync();
+        await _transaction.DisposeAsync().ConfigureAwait(false);
         _transaction = null;
     }
 

@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text;
+using BankAccount.Writer.MessageHandlers.AccountReplyRequested;
 using BankAccount.Writer.MessageHandlers.MoneyDeposited;
 using BankAccount.Writer.MessageHandlers.MoneyTransferred;
 using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
@@ -20,6 +21,7 @@ public class MessageDeserializer : ISerializer
         [nameof(MoneyDepositedEvent)] = typeof(MoneyDepositedEvent),
         [nameof(MoneyWithdrawnEvent)] = typeof(MoneyWithdrawnEvent),
         [nameof(MoneyTransferredEvent)] = typeof(MoneyTransferredEvent),
+        [nameof(AccountReplyRequestedEvent)] = typeof(AccountReplyRequestedEvent),
     };
 
     private readonly ISerializer _serializer;

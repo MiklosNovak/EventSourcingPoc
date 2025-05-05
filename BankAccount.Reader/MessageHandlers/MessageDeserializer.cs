@@ -3,6 +3,7 @@ using System.Text;
 using BankAccount.Reader.MessageHandlers.AccountCreated;
 using BankAccount.Reader.MessageHandlers.AccountCredited;
 using BankAccount.Reader.MessageHandlers.AccountDebited;
+using BankAccount.Reader.MessageHandlers.AccountStateCorrupted;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Rebus.Extensions;
@@ -17,7 +18,8 @@ public class MessageDeserializer : ISerializer
     {
         [nameof(AccountCreatedEvent)] = typeof(AccountCreatedEvent),
         [nameof(AccountCreditedEvent)] = typeof(AccountCreditedEvent),
-        [nameof(AccountDebitedEvent)] = typeof(AccountDebitedEvent)
+        [nameof(AccountDebitedEvent)] = typeof(AccountDebitedEvent),
+        [nameof(AccountStateCorruptedEvent)] = typeof(AccountStateCorruptedEvent),
     };
 
     private readonly ISerializer _serializer;

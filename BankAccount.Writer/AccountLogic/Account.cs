@@ -6,6 +6,8 @@ public class Account
 {    
     private readonly List<VersionedDomainEvent> _uncommittedEvents = [];    
 
+    private readonly List<VersionedDomainEvent> _versionedDomainEvents = [];
+
     public string AccountId { get; private set; }  
     
     public decimal Balance { get; private set; }
@@ -13,7 +15,8 @@ public class Account
     public int Version { get; private set; }
 
     public IReadOnlyCollection<VersionedDomainEvent> GetUncommittedEvents => [.. _uncommittedEvents];
-    
+
+    public IReadOnlyCollection<VersionedDomainEvent> GetVersionedDomainEvents => [.. _versionedDomainEvents];
 
     private Account()
     {
@@ -88,6 +91,7 @@ public class Account
 
         var versionedDomainEvent = new VersionedDomainEvent(domainEvent, Version);
         _uncommittedEvents.Add(versionedDomainEvent);
+        _versionedDomainEvents.Add(versionedDomainEvent);
     }
 
     private void Mutate(AccountCreatedEvent accountCreatedEvent)

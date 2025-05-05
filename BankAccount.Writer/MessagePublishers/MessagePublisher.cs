@@ -46,7 +46,7 @@ public class MessagePublisher : BackgroundService
                 _logger.LogError(ex, "Error during outbox processing.");
             }
 
-            await Task.Delay(_interval, stoppingToken);
+            await Task.Delay(_interval, stoppingToken).ConfigureAwait(false);
         }
     }
 

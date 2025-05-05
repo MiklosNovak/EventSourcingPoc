@@ -1,5 +1,6 @@
 ﻿using BankAccount.Writer.Configuration;
 using BankAccount.Writer.MessageHandlers;
+using BankAccount.Writer.MessageHandlers.AccountReplyRequested;
 using BankAccount.Writer.MessageHandlers.MoneyDeposited;
 using BankAccount.Writer.MessageHandlers.MoneyTransferred;
 using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
@@ -58,6 +59,7 @@ public class ServiceRegistrations
                                        await bus.Advanced.Topics.Subscribe(nameof(MoneyDepositedEvent)).ConfigureAwait(false);
                                        await bus.Advanced.Topics.Subscribe(nameof(MoneyWithdrawnEvent)).ConfigureAwait(false);
                                        await bus.Advanced.Topics.Subscribe(nameof(MoneyTransferredEvent)).ConfigureAwait(false);
+                                       await bus.Advanced.Topics.Subscribe(nameof(AccountReplyRequestedEvent)).ConfigureAwait(false);
                                    });
 
         services.AddScoped(_ =>

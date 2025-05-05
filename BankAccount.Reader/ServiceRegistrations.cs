@@ -3,6 +3,8 @@ using BankAccount.Reader.MessageHandlers;
 using BankAccount.Reader.MessageHandlers.AccountCreated;
 using BankAccount.Reader.MessageHandlers.AccountCredited;
 using BankAccount.Reader.MessageHandlers.AccountDebited;
+using BankAccount.Reader.MessageHandlers.AccountStateCorrupted;
+using BankAccount.Reader.MessagePublishers;
 using BankAccount.Reader.MessageReplay;
 using BankAccount.Reader.MongoDb;
 using BankAccount.Reader.Repositories;
@@ -56,6 +58,7 @@ public class ServiceRegistrations
                 await bus.Advanced.Topics.Subscribe(nameof(AccountCreatedEvent)).ConfigureAwait(false);
                 await bus.Advanced.Topics.Subscribe(nameof(AccountCreditedEvent)).ConfigureAwait(false);
                 await bus.Advanced.Topics.Subscribe(nameof(AccountDebitedEvent)).ConfigureAwait(false);
+                await bus.Advanced.Topics.Subscribe(nameof(AccountStateCorruptedEvent)).ConfigureAwait(false);
             });
 
         services.AutoRegisterHandlersFromAssemblyOf<AccountCreatedEvent>();
@@ -70,6 +73,7 @@ public class ServiceRegistrations
 
         services.AddScoped<AccountRepository>();
         services.AddSingleton<MessageBuffer>();
+        services.AddScoped<MessagePublisher>();
         services.AddHostedService<MessageReplayer>();
     }
 }

@@ -21,7 +21,7 @@ public class MessageReplayer : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(1000, stoppingToken).ConfigureAwait(false);
 
             try
             {
@@ -38,7 +38,7 @@ public class MessageReplayer : BackgroundService
                 }
 
                 // for simplicity, I send the message directly to the bus, in a real-world scenario, you might want to use a more sophisticated approach
-                await SendLocalMessageAsync(message);
+                await SendLocalMessageAsync(message).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

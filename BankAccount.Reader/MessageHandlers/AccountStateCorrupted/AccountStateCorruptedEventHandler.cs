@@ -9,7 +9,6 @@ public class AccountStateCorruptedEventHandler : IHandleMessages<AccountStateCor
 {
     private readonly AccountRepository _accountRepository;
     private readonly MessagePublisher _messagePublisher;
-    private readonly IBus _bus;
 
     public AccountStateCorruptedEventHandler(AccountRepository accountRepository, MessagePublisher messagePublisher)
     {

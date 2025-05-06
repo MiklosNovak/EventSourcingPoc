@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BankAccount.Writer.Repositories;
+namespace BankAccount.Writer.Repositories.OutboxEvents;
 
 [Table("OutboxEvents")]
 public class OutboxEventEntity

@@ -1,6 +1,6 @@
 ﻿using BankAccount.Writer.AccountLogic;
 
-namespace BankAccount.Writer.Repositories;
+namespace BankAccount.Writer.Repositories.OutboxEvents;
 
 public interface IOutboxEventRepository
 {

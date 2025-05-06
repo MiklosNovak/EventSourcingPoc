@@ -1,4 +1,4 @@
-﻿using BankAccount.Writer.Repositories;
+﻿using BankAccount.Writer.Repositories.OutboxEvents;
 using Newtonsoft.Json.Linq;
 using Rebus.Bus;
 using Rebus.Messages;

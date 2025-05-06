@@ -4,7 +4,7 @@ using Dapper.Bulk;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 
-namespace BankAccount.Writer.Repositories;
+namespace BankAccount.Writer.Repositories.Accounts;
 
 internal class AccountRepository : IAccountRepository
 {

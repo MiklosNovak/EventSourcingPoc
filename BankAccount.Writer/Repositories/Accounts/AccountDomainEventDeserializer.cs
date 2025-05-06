@@ -1,7 +1,7 @@
 ﻿using BankAccount.Writer.DomainEvents;
 using Newtonsoft.Json;
 
-namespace BankAccount.Writer.Repositories;
+namespace BankAccount.Writer.Repositories.Accounts;
 
 internal class AccountDomainEventDeserializer : IAccountDomainEventDeserializer
 {

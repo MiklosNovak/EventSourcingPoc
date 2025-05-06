@@ -1,4 +1,5 @@
-﻿using BankAccount.Writer.Repositories;
+﻿using BankAccount.Writer.Repositories.Accounts;
+using BankAccount.Writer.Repositories.OutboxEvents;
 
 namespace BankAccount.Writer.UnitOfWork;
 

@@ -16,6 +16,9 @@ using Rebus.Pipeline.Receive;
 using Rebus.Retry.Simple;
 using Rebus.Serialization;
 using Rebus.Serialization.Json;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("BankAccount.Writer.Tests")]
 
 namespace BankAccount.Writer;
 

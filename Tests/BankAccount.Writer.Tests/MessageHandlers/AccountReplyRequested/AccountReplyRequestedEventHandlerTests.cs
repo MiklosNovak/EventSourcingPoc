@@ -63,7 +63,7 @@ public class AccountReplyRequestedEventHandlerTests
     {
         // Arrange
         var message = new AccountReplyRequestedEvent { AccountId = "user@example.com" };
-        _accountRepository.GetAsync(message.AccountId).ThrowsAsync(_ => throw new System.Exception("DB error"));
+        _accountRepository.GetAsync(message.AccountId).ThrowsAsync(_ => throw new Exception("DB error"));
 
         // Act
         var act = async () => await _handler.Handle(message);

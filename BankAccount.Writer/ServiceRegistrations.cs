@@ -74,7 +74,8 @@ public class ServiceRegistrations
         services.AddScoped<IOutboxEventRepository, OutboxEventRepository>();
         services.AddScoped<IAccountDomainEventDeserializer, AccountDomainEventDeserializer>();
         services.AddScoped<IAccountUnitOfWork, AccountUnitOfWork>();
-        services.AddHostedService<MessagePublisher>();
+        services.AddScoped<IMessagePublisher, MessagePublisher>();
+        services.AddHostedService<MessagePublisherBackgroundService>();
         services.AutoRegisterHandlersFromAssemblyOf<UserCreatedHandler>();
     }
 }

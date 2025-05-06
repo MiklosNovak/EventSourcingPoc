@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using BankAccount.Writer.MessageHandlers;
 using BankAccount.Writer.MessageHandlers.MoneyDeposited;
-using BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 using BankAccount.Writer.MessageHandlers.UserCreated;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

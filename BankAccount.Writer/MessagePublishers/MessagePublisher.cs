@@ -5,7 +5,7 @@ using Rebus.Messages;
 
 namespace BankAccount.Writer.MessagePublishers;
 
-public class MessagePublisher : BackgroundService
+public class MessagePublisher : IMessagePublisher
 {
     private readonly IOutboxEventRepository _outboxEventRepository;
     private readonly ILogger<MessagePublisher> _logger;
@@ -19,41 +19,29 @@ public class MessagePublisher : BackgroundService
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task PublishMessagesAsync()
     {
-        while (!stoppingToken.IsCancellationRequested)
+        var unProcessedEvents = await _outboxEventRepository.GetUnProcessedAsync(_batchSize).ConfigureAwait(false);
+
+        foreach (var unProcessedEvent in unProcessedEvents)
         {
             try
             {
-                var unProcessedEvents = await _outboxEventRepository.GetUnProcessedAsync(_batchSize).ConfigureAwait(false);
-
-                foreach (var unProcessedEvent in unProcessedEvents)
-                {
-                    try
-                    {
-                        await ProcessAsync(unProcessedEvent).ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        var errorMessage = $"Failed to publish outbox event: {unProcessedEvent.EventType}, version: {unProcessedEvent.Version}";
-                        _logger.LogError(exception: ex, message: errorMessage);
-                    }
-                }
+                await PublishAsync(unProcessedEvent).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during outbox processing.");
+                var errorMessage =
+                    $"Failed to publish outbox event: {unProcessedEvent.EventType}, version: {unProcessedEvent.Version}";
+                _logger.LogError(exception: ex, message: errorMessage);
             }
-
-            var delay = TimeSpan.FromSeconds(5);
-            await Task.Delay(delay, stoppingToken).ConfigureAwait(false);
         }
     }
 
-    private async Task ProcessAsync(OutboxEventEntity unProcessedEvent)
+    private async Task PublishAsync(OutboxEventEntity unProcessedEvent)
     {
         // integration event can be totally different, this is done for simplicity        
-        var headers = new Dictionary<string, string> { { Headers.Type, unProcessedEvent.EventType } };
+        var headers = new Dictionary<string, string> {{Headers.Type, unProcessedEvent.EventType}};
         var payload = JObject.Parse(unProcessedEvent.Data);
         payload["Version"] = unProcessedEvent.Version;
 

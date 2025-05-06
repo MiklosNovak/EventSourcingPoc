@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 namespace BankAccount.Reader.MessageReplay;
 
-public class MessageBuffer
+public class MessageBuffer : IMessageBuffer
 {
     private readonly ConcurrentQueue<ReplayableEvent> _buffer = new();
 

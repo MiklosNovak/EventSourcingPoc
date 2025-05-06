@@ -6,13 +6,13 @@ using Newtonsoft.Json;
 
 namespace BankAccount.Writer.Repositories;
 
-public class AccountRepository
+internal class AccountRepository : IAccountRepository
 {
     private readonly SqlConnection _dbConnection;
     private readonly SqlTransaction _transaction;
-    private readonly AccountDomainEventDeserializer _eventDeserializer;
+    private readonly IAccountDomainEventDeserializer _eventDeserializer;
 
-    public AccountRepository(SqlConnection dbConnection, AccountDomainEventDeserializer eventDeserializer, SqlTransaction transaction = null) 
+    public AccountRepository(SqlConnection dbConnection, IAccountDomainEventDeserializer eventDeserializer, SqlTransaction transaction = null) 
     {
         _dbConnection = dbConnection;
         _eventDeserializer = eventDeserializer;

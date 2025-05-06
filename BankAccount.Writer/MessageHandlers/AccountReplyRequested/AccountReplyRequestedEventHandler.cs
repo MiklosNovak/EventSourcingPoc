@@ -6,12 +6,12 @@ namespace BankAccount.Writer.MessageHandlers.AccountReplyRequested;
 
 public class AccountReplyRequestedEventHandler : IHandleMessages<AccountReplyRequestedEvent>
 {
-    private readonly AccountUnitOfWork _unitOfWork;
+    private readonly IAccountUnitOfWork _unitOfWork;
 
-    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
-    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
+    private IAccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private IOutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public AccountReplyRequestedEventHandler(AccountUnitOfWork unitOfWork)
+    public AccountReplyRequestedEventHandler(IAccountUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }

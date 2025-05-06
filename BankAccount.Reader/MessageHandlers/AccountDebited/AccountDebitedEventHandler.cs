@@ -6,11 +6,11 @@ namespace BankAccount.Reader.MessageHandlers.AccountDebited;
 
 public class AccountDebitedEventHandler : IHandleMessages<AccountDebitedEvent>
 {
-    private readonly AccountRepository _accountRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountDebitedEventHandler> _logger;
-    private readonly MessageBuffer _messageBuffer;
+    private readonly IMessageBuffer _messageBuffer;
 
-    public AccountDebitedEventHandler(AccountRepository accountRepository, ILogger<AccountDebitedEventHandler> logger, MessageBuffer messageBuffer)
+    public AccountDebitedEventHandler(IAccountRepository accountRepository, ILogger<AccountDebitedEventHandler> logger, IMessageBuffer messageBuffer)
     {
         _logger = logger;
         _accountRepository = accountRepository;

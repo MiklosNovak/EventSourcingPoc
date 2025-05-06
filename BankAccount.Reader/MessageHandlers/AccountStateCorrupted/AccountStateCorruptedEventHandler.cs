@@ -1,5 +1,4 @@
 using BankAccount.Reader.MessagePublishers;
-using Rebus.Bus;
 using BankAccount.Reader.Repositories;
 using Rebus.Handlers;
 
@@ -7,10 +6,10 @@ namespace BankAccount.Reader.MessageHandlers.AccountStateCorrupted;
 
 public class AccountStateCorruptedEventHandler : IHandleMessages<AccountStateCorruptedEvent>
 {
-    private readonly AccountRepository _accountRepository;
-    private readonly MessagePublisher _messagePublisher;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IMessagePublisher _messagePublisher;
 
-    public AccountStateCorruptedEventHandler(AccountRepository accountRepository, MessagePublisher messagePublisher)
+    public AccountStateCorruptedEventHandler(IAccountRepository accountRepository, IMessagePublisher messagePublisher)
     {
         _accountRepository = accountRepository;
         _messagePublisher = messagePublisher;

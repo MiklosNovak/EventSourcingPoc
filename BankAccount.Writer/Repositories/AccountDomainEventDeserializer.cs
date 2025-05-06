@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace BankAccount.Writer.Repositories;
 
-public class AccountDomainEventDeserializer
+internal class AccountDomainEventDeserializer : IAccountDomainEventDeserializer
 {
-    internal IAccountDomainEvent Deserialize(AccountEventEntity accountEventEntity) => accountEventEntity.EventType switch
+    public IAccountDomainEvent Deserialize(AccountEventEntity accountEventEntity) => accountEventEntity.EventType switch
     {
         nameof(AccountCreatedEvent) => JsonConvert.DeserializeObject<AccountCreatedEvent>(accountEventEntity.Data),
         nameof(AccountCreditedEvent) => JsonConvert.DeserializeObject<AccountCreditedEvent>(accountEventEntity.Data),

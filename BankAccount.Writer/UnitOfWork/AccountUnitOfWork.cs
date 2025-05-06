@@ -3,14 +3,14 @@ using Microsoft.Data.SqlClient;
 
 namespace BankAccount.Writer.UnitOfWork;
 
-public class AccountUnitOfWork : IDisposable
+internal class AccountUnitOfWork : IAccountUnitOfWork
 {
     private SqlTransaction _transaction;
     private bool _disposed;
-    public AccountRepository AccountRepository { get; }
-    public OutboxEventRepository OutboxEventRepository { get; }
+    public IAccountRepository AccountRepository { get; }
+    public IOutboxEventRepository OutboxEventRepository { get; }
 
-    public AccountUnitOfWork(SqlConnection connection, AccountDomainEventDeserializer deserializer)
+    public AccountUnitOfWork(SqlConnection connection, IAccountDomainEventDeserializer deserializer)
     {
         _transaction = connection.BeginTransaction();
         AccountRepository = new AccountRepository(connection, deserializer, _transaction);

@@ -6,11 +6,11 @@ namespace BankAccount.Writer.MessageHandlers.MoneyDeposited;
 
 public class MoneyDepositedHandler : IHandleMessages<MoneyDepositedEvent>
 {
-    private readonly AccountUnitOfWork _unitOfWork;
-    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
-    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
+    private readonly IAccountUnitOfWork _unitOfWork;
+    private IAccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private IOutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public MoneyDepositedHandler(AccountUnitOfWork unitOfWork)
+    public MoneyDepositedHandler(IAccountUnitOfWork unitOfWork)
     {                
         _unitOfWork = unitOfWork;
     }

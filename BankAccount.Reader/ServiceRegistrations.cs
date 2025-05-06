@@ -71,9 +71,9 @@ public class ServiceRegistrations
             return new MongoClient(mongoUrl);
         });
 
-        services.AddScoped<AccountRepository>();
-        services.AddSingleton<MessageBuffer>();
-        services.AddScoped<MessagePublisher>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddSingleton<IMessageBuffer, MessageBuffer>();
+        services.AddScoped<IMessagePublisher, MessagePublisher>();
         services.AddHostedService<MessageReplayer>();
     }
 }

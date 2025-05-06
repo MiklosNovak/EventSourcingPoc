@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace BankAccount.Writer.Repositories;
 
-public class OutboxEventRepository
+public class OutboxEventRepository : IOutboxEventRepository
 {
     private readonly SqlConnection _dbConnection;
     private readonly SqlTransaction _transaction;

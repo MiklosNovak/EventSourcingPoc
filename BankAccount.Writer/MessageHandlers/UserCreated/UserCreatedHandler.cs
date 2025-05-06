@@ -7,11 +7,11 @@ namespace BankAccount.Writer.MessageHandlers.UserCreated;
 
 public class UserCreatedHandler : IHandleMessages<UserCreatedEvent>
 {
-    private readonly AccountUnitOfWork _unitOfWork;
-    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
-    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
+    private readonly IAccountUnitOfWork _unitOfWork;
+    private IAccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private IOutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public UserCreatedHandler(AccountUnitOfWork unitOfWork)
+    public UserCreatedHandler(IAccountUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }

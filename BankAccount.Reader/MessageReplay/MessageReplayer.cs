@@ -5,12 +5,12 @@ namespace BankAccount.Reader.MessageReplay;
 
 public class MessageReplayer : BackgroundService
 {
-    private readonly MessageBuffer _messageBuffer;
+    private readonly IMessageBuffer _messageBuffer;
     private readonly IBus _bus;
     private readonly TimeSpan _ttl = TimeSpan.FromMinutes(1);
     private readonly ILogger<MessageReplayer> _logger;
 
-    public MessageReplayer(MessageBuffer messageBuffer, IBus bus, ILogger<MessageReplayer> logger)
+    public MessageReplayer(IMessageBuffer messageBuffer, IBus bus, ILogger<MessageReplayer> logger)
     {
         _messageBuffer = messageBuffer;
         _bus = bus;

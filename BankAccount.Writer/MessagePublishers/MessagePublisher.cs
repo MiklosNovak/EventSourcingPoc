@@ -7,13 +7,13 @@ namespace BankAccount.Writer.MessagePublishers;
 
 public class MessagePublisher : BackgroundService
 {
-    private readonly OutboxEventRepository _outboxEventRepository;
+    private readonly IOutboxEventRepository _outboxEventRepository;
     private readonly ILogger<MessagePublisher> _logger;
     private readonly IBus _bus;
     private readonly TimeSpan _interval = TimeSpan.FromSeconds(5);
     private readonly int _batchSize = 10;
 
-    public MessagePublisher(OutboxEventRepository outboxEventRepository, IBus bus, ILogger<MessagePublisher> logger)
+    public MessagePublisher(IOutboxEventRepository outboxEventRepository, IBus bus, ILogger<MessagePublisher> logger)
     {
         _outboxEventRepository = outboxEventRepository;
         _bus = bus;

@@ -6,11 +6,11 @@ namespace BankAccount.Writer.MessageHandlers.MoneyWithdrawn;
 
 public class MoneyWithdrawnHandler : IHandleMessages<MoneyWithdrawnEvent>
 {
-    private readonly AccountUnitOfWork _unitOfWork;
-    private AccountRepository AccountRepository => _unitOfWork.AccountRepository;
-    private OutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
+    private readonly IAccountUnitOfWork _unitOfWork;
+    private IAccountRepository AccountRepository => _unitOfWork.AccountRepository;
+    private IOutboxEventRepository OutboxEventRepository => _unitOfWork.OutboxEventRepository;
 
-    public MoneyWithdrawnHandler(AccountUnitOfWork unitOfWork)
+    public MoneyWithdrawnHandler(IAccountUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }

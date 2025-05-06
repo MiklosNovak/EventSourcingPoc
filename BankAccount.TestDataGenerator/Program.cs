@@ -42,6 +42,11 @@ var events = new List<object>
         AccountId = "richard@example.com",
         TargetAccountId = "christine@example.com",
         Amount = 400                                        // richard: 1300, christine: 750
+    },
+
+    new AccountStateCorruptedEvent
+    {
+        AccountId = "richard@example.com"
     }
 };
 

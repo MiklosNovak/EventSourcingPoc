@@ -69,11 +69,10 @@ public class ServiceRegistrations
             return conn;
         });
 
-        services.AddScoped<AccountRepository>();
-        services.AddScoped<OutboxEventEntity>();
-        services.AddScoped<OutboxEventRepository>();
-        services.AddScoped<AccountDomainEventDeserializer>();
-        services.AddScoped<AccountUnitOfWork>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IOutboxEventRepository, OutboxEventRepository>();
+        services.AddScoped<IAccountDomainEventDeserializer, AccountDomainEventDeserializer>();
+        services.AddScoped<IAccountUnitOfWork, AccountUnitOfWork>();
         services.AddHostedService<MessagePublisher>();
         services.AutoRegisterHandlersFromAssemblyOf<UserCreatedHandler>();
     }

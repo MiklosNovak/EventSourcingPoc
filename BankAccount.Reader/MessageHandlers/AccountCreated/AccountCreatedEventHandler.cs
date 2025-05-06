@@ -6,10 +6,10 @@ namespace BankAccount.Reader.MessageHandlers.AccountCreated;
 
 public class AccountCreatedEventHandler : IHandleMessages<AccountCreatedEvent>
 {
-    private readonly AccountRepository _accountRepository;
+    private readonly IAccountRepository _accountRepository;
     private readonly ILogger<AccountCreatedEventHandler> _logger;
 
-    public AccountCreatedEventHandler(AccountRepository accountRepository, ILogger<AccountCreatedEventHandler> logger)
+    public AccountCreatedEventHandler(IAccountRepository accountRepository, ILogger<AccountCreatedEventHandler> logger)
     {
         _logger = logger;
         _accountRepository = accountRepository;

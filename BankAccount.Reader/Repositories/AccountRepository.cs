@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace BankAccount.Reader.Repositories;
 
-public class AccountRepository
+public class AccountRepository : IAccountRepository
 {
     private readonly IMongoCollection<AccountEntity> _accountCollection;
 

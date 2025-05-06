@@ -4,7 +4,7 @@ using Rebus.Messages;
 
 namespace BankAccount.Reader.MessagePublishers;
 
-public class MessagePublisher
+public class MessagePublisher : IMessagePublisher
 {
     private readonly IBus _bus;
 

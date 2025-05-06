@@ -74,6 +74,7 @@ public class ServiceRegistrations
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddSingleton<IMessageBuffer, MessageBuffer>();
         services.AddScoped<IMessagePublisher, MessagePublisher>();
-        services.AddHostedService<MessageReplayer>();
+        services.AddScoped<MessageReplayer>();
+        services.AddHostedService<MessageReplayerBackgroundService>();
     }
 }

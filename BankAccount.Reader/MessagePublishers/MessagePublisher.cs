@@ -1,4 +1,5 @@
 ﻿using BankAccount.Reader.MessageHandlers.AccountStateCorrupted;
+using BankAccount.Reader.MessageReplay;
 using Rebus.Bus;
 using Rebus.Messages;
 
@@ -20,5 +21,16 @@ public class MessagePublisher : IMessagePublisher
         var payload = new { AccountId = message.AccountId };
 
         await _bus.Advanced.Topics.Publish(eventType, payload, headers).ConfigureAwait(false);
+    }
+
+    public async Task SendLocalAsync(ReplayableEvent message)
+    {
+        var eventType = message.GetType().Name;
+        var headers = new Dictionary<string, string>
+        {
+            { Headers.Type, eventType }
+        };
+
+        await _bus.SendLocal(message, headers).ConfigureAwait(false);
     }
 }

@@ -1,50 +1,35 @@
-﻿using Rebus.Bus;
-using Rebus.Messages;
+﻿using BankAccount.Reader.MessagePublishers;
 
 namespace BankAccount.Reader.MessageReplay;
 
-public class MessageReplayer : BackgroundService
+public class MessageReplayer
 {
     private readonly IMessageBuffer _messageBuffer;
-    private readonly IBus _bus;
     private readonly TimeSpan _ttl = TimeSpan.FromMinutes(1);
-    private readonly ILogger<MessageReplayer> _logger;
+    private readonly IMessagePublisher _messagePublisher;
 
-    public MessageReplayer(IMessageBuffer messageBuffer, IBus bus, ILogger<MessageReplayer> logger)
+    public MessageReplayer(IMessageBuffer messageBuffer, IMessagePublisher messagePublisher)
     {
         _messageBuffer = messageBuffer;
-        _bus = bus;
-        _logger = logger;
+        _messagePublisher = messagePublisher;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task ReplayEventsAsync()
     {
-        while (!stoppingToken.IsCancellationRequested)
+        var isMessageBuffered = _messageBuffer.TryGet(out var message);
+
+        if (!isMessageBuffered)
         {
-            await Task.Delay(1000, stoppingToken).ConfigureAwait(false);
-
-            try
-            {
-                var isMessageBuffered = _messageBuffer.TryGet(out var message);
-
-                if (!isMessageBuffered)
-                {
-                    continue;
-                }
-
-                if (IsMessageExpired(message))
-                {
-                    continue;
-                }
-
-                // for simplicity, I send the message directly to the bus, in a real-world scenario, you might want to use a more sophisticated approach
-                await SendLocalMessageAsync(message).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during buffer processing.");
-            }
+            return;
         }
+
+        if (IsMessageExpired(message))
+        {
+            return;
+        }
+
+        // for simplicity, I send the message directly to the bus, in a real-world scenario, you might want to use a more sophisticated approach
+        await SendMessageAsync(message).ConfigureAwait(false);
     }
 
     private bool IsMessageExpired(ReplayableEvent message)
@@ -52,16 +37,10 @@ public class MessageReplayer : BackgroundService
         return message.ExpiryDate.HasValue && message.ExpiryDate.Value + _ttl < DateTime.UtcNow;
     }
 
-    private async Task SendLocalMessageAsync(ReplayableEvent message)
+    private async Task SendMessageAsync(ReplayableEvent message)
     {
-        var eventType = message.GetType().Name;
-        var headers = new Dictionary<string, string>
-        {
-            { Headers.Type, eventType }
-        };
-
         message.ExpiryDate ??= DateTime.UtcNow.Add(_ttl);
 
-        await _bus.SendLocal(message, headers).ConfigureAwait(false);
+        await _messagePublisher.SendLocalAsync(message).ConfigureAwait(false);
     }
 }

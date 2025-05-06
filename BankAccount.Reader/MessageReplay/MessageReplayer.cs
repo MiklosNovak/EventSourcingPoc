@@ -57,7 +57,7 @@ public class MessageReplayer
         return expiryDate < DateTime.UtcNow;
     }
 
-    private string GetKey(IIntegrationEvent message)
+    private static string GetKey(IIntegrationEvent message)
     {
         return $"{message.AccountId}_{message.Version}";
     }

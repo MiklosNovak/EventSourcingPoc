@@ -4,7 +4,7 @@ namespace BankAccount.Reader.MessageReplay;
 
 public class MessageBuffer : IMessageBuffer
 {
-    private readonly ConcurrentBag<IIntegrationEvent> _buffer = new();
+    private readonly ConcurrentBag<IIntegrationEvent> _buffer = [];
 
     public void Add(IIntegrationEvent message)
     {

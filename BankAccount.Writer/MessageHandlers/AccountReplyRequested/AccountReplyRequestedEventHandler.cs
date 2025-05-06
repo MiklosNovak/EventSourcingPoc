@@ -40,6 +40,6 @@ public class AccountReplyRequestedEventHandler : IHandleMessages<AccountReplyReq
             return;
         }
 
-        await OutboxEventRepository.SaveAsync(account.GetVersionedDomainEvents).ConfigureAwait(false);
+        await OutboxEventRepository.AddAsync(account.GetVersionedDomainEvents).ConfigureAwait(false);
     }
 }

@@ -17,17 +17,17 @@ public class OutboxEventRepository : IOutboxEventRepository
         _transaction = transaction;
     }
 
-    public async Task SaveAsync(IReadOnlyCollection<VersionedDomainEvent> versionedEvents)
+    public async Task AddAsync(IReadOnlyCollection<VersionedDomainEvent> versionedEvents)
     {
         if (versionedEvents == null || versionedEvents.Count == 0)
             return;
 
         var outboxEvents = versionedEvents.Select(Map).ToList();
-        
+
         await _dbConnection.BulkInsertAsync(outboxEvents, _transaction).ConfigureAwait(false);        
     }
 
-    public async Task<IEnumerable<OutboxEventEntity>> GetUnProcessedEventsAsync(int batchSize)
+    public async Task<IEnumerable<OutboxEventEntity>> GetUnProcessedAsync(int batchSize)
     {
         var unProcessedSql = $"SELECT TOP {batchSize} * FROM dbo.OutboxEvents WHERE Published = 0";
         return await _dbConnection.QueryAsync<OutboxEventEntity>(unProcessedSql, _transaction).ConfigureAwait(false);
@@ -35,8 +35,8 @@ public class OutboxEventRepository : IOutboxEventRepository
 
     public async Task MarkAsProcessedAsync(OutboxEventEntity outbox)
     {
-        var updateProcessedSql = "UPDATE dbo.OutboxEvents SET Published = 1 WHERE Version = @Version AND EventType = @EventType";
-        await _dbConnection.ExecuteAsync(updateProcessedSql, new { outbox.Version, outbox.EventType }, _transaction).ConfigureAwait(false);
+        var updateProcessedSql = "UPDATE dbo.OutboxEvents SET Published = 1 WHERE SequenceId = @SequenceId";
+        await _dbConnection.ExecuteAsync(updateProcessedSql, new { outbox.SequenceId }, _transaction).ConfigureAwait(false);
     }
 
     private OutboxEventEntity Map(VersionedDomainEvent versionedEvent)

@@ -10,7 +10,6 @@ public class MessagePublisher : BackgroundService
     private readonly IOutboxEventRepository _outboxEventRepository;
     private readonly ILogger<MessagePublisher> _logger;
     private readonly IBus _bus;
-    private readonly TimeSpan _interval = TimeSpan.FromSeconds(5);
     private readonly int _batchSize = 10;
 
     public MessagePublisher(IOutboxEventRepository outboxEventRepository, IBus bus, ILogger<MessagePublisher> logger)
@@ -26,7 +25,7 @@ public class MessagePublisher : BackgroundService
         {
             try
             {
-                var unProcessedEvents = await _outboxEventRepository.GetUnProcessedEventsAsync(_batchSize).ConfigureAwait(false);
+                var unProcessedEvents = await _outboxEventRepository.GetUnProcessedAsync(_batchSize).ConfigureAwait(false);
 
                 foreach (var unProcessedEvent in unProcessedEvents)
                 {
@@ -46,7 +45,8 @@ public class MessagePublisher : BackgroundService
                 _logger.LogError(ex, "Error during outbox processing.");
             }
 
-            await Task.Delay(_interval, stoppingToken).ConfigureAwait(false);
+            var delay = TimeSpan.FromSeconds(5);
+            await Task.Delay(delay, stoppingToken).ConfigureAwait(false);
         }
     }
 

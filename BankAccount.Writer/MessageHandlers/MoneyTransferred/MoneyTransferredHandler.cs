@@ -50,7 +50,7 @@ public class MoneyTransferredHandler : IHandleMessages<MoneyTransferredEvent>
         targetAccount.Deposit(message.Amount);
 
         var uncommittedEvents = account.GetUncommittedEvents.Concat(targetAccount.GetUncommittedEvents).ToList();
-        await OutboxEventRepository.SaveAsync(uncommittedEvents).ConfigureAwait(false);        
+        await OutboxEventRepository.AddAsync(uncommittedEvents).ConfigureAwait(false);        
 
         await AccountRepository.SaveAsync(account).ConfigureAwait(false);
         await AccountRepository.SaveAsync(targetAccount).ConfigureAwait(false);

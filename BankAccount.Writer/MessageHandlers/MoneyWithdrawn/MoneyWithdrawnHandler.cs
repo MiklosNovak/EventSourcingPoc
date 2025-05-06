@@ -41,7 +41,7 @@ public class MoneyWithdrawnHandler : IHandleMessages<MoneyWithdrawnEvent>
 
         account.Withdrawn(message.Amount);
 
-        await OutboxEventRepository.SaveAsync(account.GetUncommittedEvents).ConfigureAwait(false);
+        await OutboxEventRepository.AddAsync(account.GetUncommittedEvents).ConfigureAwait(false);
         await AccountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

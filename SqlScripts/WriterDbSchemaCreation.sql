@@ -72,6 +72,7 @@ BEGIN
     PRINT N'Creating table [dbo].[OutboxEvents]...';
 
     CREATE TABLE dbo.OutboxEvents (
+        SequenceId BIGINT  IDENTITY(1,1)   PRIMARY KEY,
         Version INT NOT NULL,
         EventType NVARCHAR(255) NOT NULL,
         Data NVARCHAR(MAX) NOT NULL,

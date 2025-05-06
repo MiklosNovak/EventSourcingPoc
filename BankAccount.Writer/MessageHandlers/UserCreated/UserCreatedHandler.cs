@@ -42,7 +42,7 @@ public class UserCreatedHandler : IHandleMessages<UserCreatedEvent>
 
         account = new Account(message.AccountId);
 
-        await OutboxEventRepository.SaveAsync(account.GetUncommittedEvents).ConfigureAwait(false);
+        await OutboxEventRepository.AddAsync(account.GetUncommittedEvents).ConfigureAwait(false);
         await AccountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

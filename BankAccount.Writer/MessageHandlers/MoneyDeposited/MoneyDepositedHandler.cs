@@ -41,7 +41,7 @@ public class MoneyDepositedHandler : IHandleMessages<MoneyDepositedEvent>
 
         account.Deposit(message.Amount);
         
-        await OutboxEventRepository.SaveAsync(account.GetUncommittedEvents).ConfigureAwait(false);
+        await OutboxEventRepository.AddAsync(account.GetUncommittedEvents).ConfigureAwait(false);
         await AccountRepository.SaveAsync(account).ConfigureAwait(false);
     }
 }

@@ -4,7 +4,7 @@ namespace BankAccount.Writer.Repositories.OutboxEvents;
 
 public interface IOutboxEventRepository
 {
-    Task SaveAsync(IReadOnlyCollection<VersionedDomainEvent> versionedEvents);
-    Task<IEnumerable<OutboxEventEntity>> GetUnProcessedEventsAsync(int batchSize);
+    Task AddAsync(IReadOnlyCollection<VersionedDomainEvent> versionedEvents);
+    Task<IEnumerable<OutboxEventEntity>> GetUnProcessedAsync(int batchSize);
     Task MarkAsProcessedAsync(OutboxEventEntity outbox);
 }

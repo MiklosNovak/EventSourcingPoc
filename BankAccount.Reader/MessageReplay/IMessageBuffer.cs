@@ -1,7 +1,10 @@
-﻿namespace BankAccount.Reader.MessageReplay;
+﻿using BankAccount.Reader.MessageHandlers;
+
+namespace BankAccount.Reader.MessageReplay;
 
 public interface IMessageBuffer
 {
-    void Add(ReplayableEvent message);
-    bool TryGet(out ReplayableEvent result);
+    void Add(IIntegrationEvent message);
+
+    IReadOnlyCollection<IIntegrationEvent> TakeAll();
 }

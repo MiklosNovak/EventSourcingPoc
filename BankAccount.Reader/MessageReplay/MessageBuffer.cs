@@ -1,17 +1,25 @@
-﻿using System.Collections.Concurrent;
+﻿using BankAccount.Reader.MessageHandlers;
+using System.Collections.Concurrent;
 namespace BankAccount.Reader.MessageReplay;
 
 public class MessageBuffer : IMessageBuffer
 {
-    private readonly ConcurrentQueue<ReplayableEvent> _buffer = new();
+    private readonly ConcurrentBag<IIntegrationEvent> _buffer = new();
 
-    public void Add(ReplayableEvent message)
+    public void Add(IIntegrationEvent message)
     {
-        _buffer.Enqueue(message);
+        _buffer.Add(message);
     }
 
-    public bool TryGet(out ReplayableEvent result)
+    public IReadOnlyCollection<IIntegrationEvent> TakeAll()
     {
-        return _buffer.TryDequeue(out result);
+        var messages = new List<IIntegrationEvent>();
+
+        while (_buffer.TryTake(out var message))
+        {
+            messages.Add(message);
+        }
+
+        return messages;
     }
 }

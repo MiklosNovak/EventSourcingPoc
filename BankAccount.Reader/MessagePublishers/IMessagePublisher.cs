@@ -1,5 +1,5 @@
-﻿using BankAccount.Reader.MessageHandlers.AccountStateCorrupted;
-using BankAccount.Reader.MessageReplay;
+﻿using BankAccount.Reader.MessageHandlers;
+using BankAccount.Reader.MessageHandlers.AccountStateCorrupted;
 
 namespace BankAccount.Reader.MessagePublishers;
 
@@ -7,5 +7,5 @@ public interface IMessagePublisher
 {
     Task PublishAccountReplyRequestedEventAsync(AccountStateCorruptedEvent message);
 
-    Task SendLocalAsync(ReplayableEvent message);
+    Task SendLocalAsync(IIntegrationEvent message);
 }

@@ -1,8 +1,6 @@
-using BankAccount.Reader.MessageReplay;
-
 namespace BankAccount.Reader.MessageHandlers.AccountCreated;
 
-public record AccountCreatedEvent : ReplayableEvent
+public record AccountCreatedEvent : IIntegrationEvent
 {
     public string AccountId { get; init; }
 

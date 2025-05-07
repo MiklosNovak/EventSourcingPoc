@@ -46,17 +46,17 @@ public class MoneyTransferredHandlerTests
         _accountRepository.GetAsync(message.TargetAccountId).Returns(targetAccount);
 
         // Act
-        await _handler.Handle(message);
+        await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await _outboxEventRepository.Received(1).AddAsync(
             Arg.Is<IReadOnlyCollection<VersionedDomainEvent>>(events =>
                 events.SequenceEqual(sourceAccount.GetUncommittedEvents.Concat(targetAccount.GetUncommittedEvents))
-            ));
+            )).ConfigureAwait(false);
 
-        await _accountRepository.Received(1).SaveAsync(sourceAccount);
-        await _accountRepository.Received(1).SaveAsync(targetAccount);
-        await _unitOfWork.Received(1).CommitAsync();
+        await _accountRepository.Received(1).SaveAsync(sourceAccount).ConfigureAwait(false);
+        await _accountRepository.Received(1).SaveAsync(targetAccount).ConfigureAwait(false);
+        await _unitOfWork.Received(1).CommitAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -73,12 +73,12 @@ public class MoneyTransferredHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns((Account)null);
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Account 'notfound@example.com' not found!");
-        await _unitOfWork.Received(1).RollbackAsync();
+            .WithMessage("Account 'notfound@example.com' not found!").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -99,12 +99,12 @@ public class MoneyTransferredHandlerTests
         _accountRepository.GetAsync(message.TargetAccountId).Returns((Account)null);
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Target account 'notfound@example.com' not found!");
-        await _unitOfWork.Received(1).RollbackAsync();
+            .WithMessage("Target account 'notfound@example.com' not found!").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -121,10 +121,10 @@ public class MoneyTransferredHandlerTests
         _accountRepository.GetAsync(message.AccountId).ThrowsAsync(new Exception("Unexpected failure"));
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Unexpected failure");
-        await _unitOfWork.Received(1).RollbackAsync();
+        await act.Should().ThrowAsync<Exception>().WithMessage("Unexpected failure").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 }

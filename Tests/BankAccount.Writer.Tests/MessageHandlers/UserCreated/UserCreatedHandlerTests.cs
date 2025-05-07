@@ -33,14 +33,14 @@ public class UserCreatedHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns((Account)null);
 
         // Act
-        await _handler.Handle(message);
+        await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await _outboxEventRepository.Received(1).AddAsync(
-            Arg.Is<IReadOnlyCollection<VersionedDomainEvent>>(events => events.Any()));
+            Arg.Is<IReadOnlyCollection<VersionedDomainEvent>>(events => events.Any())).ConfigureAwait(false);
 
-        await _accountRepository.Received(1).SaveAsync(Arg.Is<Account>(a => a.AccountId == message.AccountId));
-        await _unitOfWork.Received(1).CommitAsync();
+        await _accountRepository.Received(1).SaveAsync(Arg.Is<Account>(a => a.AccountId == message.AccountId)).ConfigureAwait(false);
+        await _unitOfWork.Received(1).CommitAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -51,12 +51,12 @@ public class UserCreatedHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns(new Account(message.AccountId));
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Account with email 'existing@example.com' already exists.");
-        await _unitOfWork.Received(1).RollbackAsync();
+            .WithMessage("Account with email 'existing@example.com' already exists.").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -67,10 +67,10 @@ public class UserCreatedHandlerTests
         _accountRepository.GetAsync(message.AccountId).ThrowsAsync(new Exception("Unexpected"));
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Unexpected");
-        await _unitOfWork.Received(1).RollbackAsync();
+        await act.Should().ThrowAsync<Exception>().WithMessage("Unexpected").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 }

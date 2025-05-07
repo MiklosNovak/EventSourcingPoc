@@ -14,7 +14,7 @@ public class MessagePublisher
 
     public async Task PublishAsync<T>(T message)
     {
-        var eventType = message.GetType().Name;
+        var eventType = message!.GetType().Name;
         var headers = new Dictionary<string, string> { { Headers.Type, eventType } };
         await _bus.Advanced.Topics.Publish(eventType, message, headers).ConfigureAwait(false);
     }

@@ -32,7 +32,7 @@ public class MessageDeserializerTests
         _messageDeserializer.Serialize(message).Returns(transportMessage);
 
         // Act
-        var result = await _messageDeserializer.Serialize(message);
+        var result = await _messageDeserializer.Serialize(message).ConfigureAwait(false);
 
         // Assert
         result.Should().Be(transportMessage);
@@ -49,7 +49,7 @@ public class MessageDeserializerTests
         _serializer.Deserialize(Arg.Any<TransportMessage>()).Returns(Task.FromResult(new Message(headers, JObject.Parse(rawJson))));
 
         // Act
-        var result = await _messageDeserializer.Deserialize(transportMessage);
+        var result = await _messageDeserializer.Deserialize(transportMessage).ConfigureAwait(false);
 
         // Assert
         result.Body.Should().BeEquivalentTo(JObject.Parse(rawJson));
@@ -66,7 +66,7 @@ public class MessageDeserializerTests
         var transportMessage = new TransportMessage(headers, Encoding.UTF8.GetBytes(jsonBody));
 
         // Act
-        var result = await _messageDeserializer.Deserialize(transportMessage);
+        var result = await _messageDeserializer.Deserialize(transportMessage).ConfigureAwait(false);
 
         // Assert
         var deserializedMessage = (MoneyDepositedEvent) result.Body;

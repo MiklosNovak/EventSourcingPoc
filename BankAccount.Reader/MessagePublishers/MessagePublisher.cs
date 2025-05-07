@@ -39,7 +39,7 @@ public class MessagePublisher : IMessagePublisher
         foreach (var handler in handlers)
         {
             var handleMethod = handlerInterfaceType.GetMethod("Handle");
-            var task = (Task)handleMethod.Invoke(handler, new[] { message });
+            var task = (Task)handleMethod!.Invoke(handler, [message]);
             await task!.ConfigureAwait(false);
         }
     }

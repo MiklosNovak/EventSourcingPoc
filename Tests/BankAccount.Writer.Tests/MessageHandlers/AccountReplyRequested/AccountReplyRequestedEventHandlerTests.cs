@@ -36,11 +36,11 @@ public class AccountReplyRequestedEventHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns(account);
 
         // Act
-        await _handler.Handle(message);
+        await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
-        await _outboxEventRepository.Received(1).AddAsync(Arg.Is<IReadOnlyCollection<VersionedDomainEvent>>(s => s.SequenceEqual(account.GetVersionedDomainEvents)));
-        await _unitOfWork.Received(1).CommitAsync();
+        await _outboxEventRepository.Received(1).AddAsync(Arg.Is<IReadOnlyCollection<VersionedDomainEvent>>(s => s.SequenceEqual(account.GetVersionedDomainEvents))).ConfigureAwait(false);
+        await _unitOfWork.Received(1).CommitAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -51,11 +51,11 @@ public class AccountReplyRequestedEventHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns((Account)null);
 
         // Act
-        await _handler.Handle(message);
+        await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
-        await _outboxEventRepository.DidNotReceive().AddAsync(Arg.Any<IReadOnlyCollection<VersionedDomainEvent>>());
-        await _unitOfWork.Received(1).CommitAsync();
+        await _outboxEventRepository.DidNotReceive().AddAsync(Arg.Any<IReadOnlyCollection<VersionedDomainEvent>>()).ConfigureAwait(false);
+        await _unitOfWork.Received(1).CommitAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -66,10 +66,10 @@ public class AccountReplyRequestedEventHandlerTests
         _accountRepository.GetAsync(message.AccountId).ThrowsAsync(_ => throw new Exception("DB error"));
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("DB error");
-        await _unitOfWork.Received(1).RollbackAsync();
+        await act.Should().ThrowAsync<Exception>().WithMessage("DB error").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 }

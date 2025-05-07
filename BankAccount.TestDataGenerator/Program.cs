@@ -54,5 +54,5 @@ var events = new List<object>
 foreach (var evt in events)
 {
     await publisher.PublishAsync(evt).ConfigureAwait(false);
-    await Task.Delay(1000);
+    await Task.Delay(1000).ConfigureAwait(false);
 }

@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{213706B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.Writer.Tests", "Tests\BankAccount.Writer.Tests\BankAccount.Writer.Tests.csproj", "{C4340831-E445-4C39-8D11-5A11FEB8EE56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.Reader.Tests", "..\BankAccount.Reader.Tests\BankAccount.Reader.Tests.csproj", "{DFA9D8E8-CD73-4C78-A5D3-DBA22F9183B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{C4340831-E445-4C39-8D11-5A11FEB8EE56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4340831-E445-4C39-8D11-5A11FEB8EE56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4340831-E445-4C39-8D11-5A11FEB8EE56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFA9D8E8-CD73-4C78-A5D3-DBA22F9183B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFA9D8E8-CD73-4C78-A5D3-DBA22F9183B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFA9D8E8-CD73-4C78-A5D3-DBA22F9183B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFA9D8E8-CD73-4C78-A5D3-DBA22F9183B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,7 +77,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 		{D31A673D-D6A0-4B16-926B-784B76D9F5E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{242DD0A7-AD9C-5913-B63E-747C0F344CD6} = {213706B2-8EEC-45AC-9B6D-093406AD2DAD}
 		{C4340831-E445-4C39-8D11-5A11FEB8EE56} = {213706B2-8EEC-45AC-9B6D-093406AD2DAD}
+		{DFA9D8E8-CD73-4C78-A5D3-DBA22F9183B8} = {213706B2-8EEC-45AC-9B6D-093406AD2DAD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DBB2AAB-9F34-4A4C-8DF1-EC14305453BB}

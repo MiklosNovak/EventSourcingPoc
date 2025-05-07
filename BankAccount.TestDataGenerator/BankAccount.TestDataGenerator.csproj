@@ -9,6 +9,15 @@
     <DockerfileContext>..\EventSourcingPoc</DockerfileContext>
   </PropertyGroup>
 
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>CS8618;IDE0290</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>CS8618;IDE0290</NoWarn>
+	</PropertyGroup>
+
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

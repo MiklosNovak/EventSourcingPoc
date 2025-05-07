@@ -15,6 +15,10 @@ using Rebus.Pipeline.Receive;
 using Rebus.Retry.Simple;
 using Rebus.Serialization;
 using Rebus.Serialization.Json;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("BankAccount.Reader.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace BankAccount.Reader;
 

@@ -42,16 +42,16 @@ public class MoneyWithdrawnHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns(account);
 
         // Act
-        await _handler.Handle(message);
+        await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await _outboxEventRepository.Received(1).AddAsync(
             Arg.Is<IReadOnlyCollection<VersionedDomainEvent>>(events =>
                 events.SequenceEqual(account.GetUncommittedEvents))
-        );
+        ).ConfigureAwait(false);
 
-        await _accountRepository.Received(1).SaveAsync(account);
-        await _unitOfWork.Received(1).CommitAsync();
+        await _accountRepository.Received(1).SaveAsync(account).ConfigureAwait(false);
+        await _unitOfWork.Received(1).CommitAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -67,12 +67,12 @@ public class MoneyWithdrawnHandlerTests
         _accountRepository.GetAsync(message.AccountId).Returns((Account)null);
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
         await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("Account 'unknown@example.com' not found!");
-        await _unitOfWork.Received(1).RollbackAsync();
+            .WithMessage("Account 'unknown@example.com' not found!").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -88,10 +88,10 @@ public class MoneyWithdrawnHandlerTests
         _accountRepository.GetAsync(message.AccountId).ThrowsAsync(new Exception("Unexpected error"));
 
         // Act
-        var act = async () => await _handler.Handle(message);
+        var act = async () => await _handler.Handle(message).ConfigureAwait(false);
 
         // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Unexpected error");
-        await _unitOfWork.Received(1).RollbackAsync();
+        await act.Should().ThrowAsync<Exception>().WithMessage("Unexpected error").ConfigureAwait(false);
+        await _unitOfWork.Received(1).RollbackAsync().ConfigureAwait(false);
     }
 }

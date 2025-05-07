@@ -38,27 +38,27 @@ public class MessagePublisherTests
         _outboxEventRepository.GetUnProcessedAsync(Arg.Any<int>()).Returns(events);
 
         // Act
-        await _messagePublisher.PublishMessagesAsync();
+        await _messagePublisher.PublishMessagesAsync().ConfigureAwait(false);
 
         // Assert
         await _bus.Advanced.Topics.Received(1).Publish(
             "MoneyDeposited", 
             Arg.Is<JObject>(j => j["Amount"]!.Value<int>() == 100 && j["Version"]!.Value<int>() == 33), 
-            Arg.Is<Dictionary<string, string>>(s=> s[Headers.Type] == unProcessedEvent.EventType));
-        await _outboxEventRepository.Received(1).MarkAsProcessedAsync(unProcessedEvent);
+            Arg.Is<Dictionary<string, string>>(s=> s[Headers.Type] == unProcessedEvent.EventType)).ConfigureAwait(false);
+        await _outboxEventRepository.Received(1).MarkAsProcessedAsync(unProcessedEvent).ConfigureAwait(false);
     }
 
     [TestMethod]
     public async Task PublishMessagesAsync_ShouldNotPublishMessages_WhenNoUnProcessedEvents()
     {
         // Arrange
-        _outboxEventRepository.GetUnProcessedAsync(Arg.Any<int>()).Returns(new List<OutboxEventEntity>());
+        _outboxEventRepository.GetUnProcessedAsync(Arg.Any<int>()).Returns([]);
 
         // Act
-        await _messagePublisher.PublishMessagesAsync();
+        await _messagePublisher.PublishMessagesAsync().ConfigureAwait(false);
 
         // Assert
-        await _bus.Advanced.Topics.DidNotReceive().Publish(Arg.Any<string>(), Arg.Any<JObject>(), Arg.Any<Dictionary<string, string>>());
+        await _bus.Advanced.Topics.DidNotReceive().Publish(Arg.Any<string>(), Arg.Any<JObject>(), Arg.Any<Dictionary<string, string>>()).ConfigureAwait(false);
     }
 
     [TestMethod]
@@ -80,7 +80,7 @@ public class MessagePublisherTests
             .ThrowsAsync(new Exception("Publish error"));
 
         // Act
-        await _messagePublisher.PublishMessagesAsync();
+        await _messagePublisher.PublishMessagesAsync().ConfigureAwait(false);
 
         // Assert
         _logger.Received(1).LogError(Arg.Any<Exception>(), "Failed to publish outbox event: MoneyDeposited, version: 1");
@@ -105,7 +105,7 @@ public class MessagePublisherTests
             .Throws(new Exception("Error marking as processed"));
 
         // Act
-        await _messagePublisher.PublishMessagesAsync();
+        await _messagePublisher.PublishMessagesAsync().ConfigureAwait(false);
 
         // Assert
         _logger.Received(1).LogError(Arg.Any<Exception>(), "Failed to publish outbox event: MoneyDeposited, version: 1");

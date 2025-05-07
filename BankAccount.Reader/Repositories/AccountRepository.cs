@@ -56,7 +56,7 @@ public class AccountRepository : IAccountRepository
 
         if (!replaceResult.IsAcknowledged || replaceResult.ModifiedCount == 0)
         {
-            throw new Exception($"Version mismatch for account {account.AccountId}. Expected version: {account.OldVersion}, Actual version: {replaceResult.ModifiedCount}.");
+            throw new Exception($"Version mismatch for account {account.AccountId}. Expected version: {account.OldVersion}.");
         }
     }
 
